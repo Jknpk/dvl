@@ -1,4 +1,4 @@
 # dvl
 Das verrueckte Labyrinth
 
-Gruppenname: HolzForLive [Arbeitstitel]
+Gruppenname: Purple Maze
