@@ -14,7 +14,6 @@ import javax.xml.bind.Unmarshaller;
 import generated.MazeCom;
 import generated.MazeComType;
 import generated.ObjectFactory;
-import networking.MazeComMessageFactory;
 import networking.UTFInputStream;
 import networking.UTFOutputStream;
 
@@ -40,8 +39,6 @@ public class Client {
 	
 	private int id;
 	
-	private MazeComMessageFactory mazeComMessageFactory;
-	
 	public Client(String ip, String port){
 		this.ip = ip;
 		this.port = port;
@@ -53,7 +50,6 @@ public class Client {
 			marshaller = jc.createMarshaller();
 			marshaller.setProperty(Marshaller.JAXB_FORMATTED_OUTPUT, Boolean.TRUE);
 			unmarshaller = jc.createUnmarshaller();
-			mazeComMessageFactory = new MazeComMessageFactory();
 	   	} catch (JAXBException | IOException e) {
 			e.printStackTrace();
 		}
@@ -107,5 +103,9 @@ public class Client {
 			client = new Client("127.0.0.1", "5123");	//Defaultwerte
 		}	
 		client.connect();
+	}
+
+	public int getId() {
+		return this.id;
 	}
 }

@@ -1,11 +1,9 @@
 package client;
 
-import java.net.SocketException;
-
 import generated.ErrorType;
 import generated.MazeCom;
 import generated.MazeComType;
-import networking.MazeComMessageFactory;
+
 
 public class Login {
 
