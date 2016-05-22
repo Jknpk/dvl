@@ -34,7 +34,10 @@ public class Game {
 				}
 				
 				if(mcAnswer.getMcType() == MazeComType.ACCEPT){
-					if(!mcAnswer.getAcceptMessage().isAccept() && mcAnswer.getAcceptMessage().getErrorCode() == ErrorType.AWAIT_MOVE){
+					if(mcAnswer.getAcceptMessage().isAccept()){
+						System.err.println("Gültiger Zug!");
+					}
+					else if(!mcAnswer.getAcceptMessage().isAccept() && mcAnswer.getAcceptMessage().getErrorCode() == ErrorType.AWAIT_MOVE){
 						System.err.println("Falsche Nachricht!");
 					}
 					else if(!mcAnswer.getAcceptMessage().isAccept() && mcAnswer.getAcceptMessage().getErrorCode() == ErrorType.ILLEGAL_MOVE){
