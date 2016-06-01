@@ -11,6 +11,7 @@ public class Game {
 	
 	private Client client;
 	private Taktik taktik = new testTaktik();				// Hier die Taktik festlegen
+//	private Taktik taktik = new OliTaktik();				// Hier die Taktik festlegen
 	private MazeComMessageFactory mazeComMessageFactory;
 	
 	public Game(Client client){
@@ -35,7 +36,7 @@ public class Game {
 				
 				if(mcAnswer.getMcType() == MazeComType.ACCEPT){
 					if(mcAnswer.getAcceptMessage().isAccept()){
-						System.err.println("Gültiger Zug!");
+						System.err.println("Gï¿½ltiger Zug!");
 					}
 					else if(!mcAnswer.getAcceptMessage().isAccept() && mcAnswer.getAcceptMessage().getErrorCode() == ErrorType.AWAIT_MOVE){
 						System.err.println("Falsche Nachricht!");
