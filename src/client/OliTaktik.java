@@ -54,7 +54,9 @@ public class OliTaktik implements Taktik {
 
 		// print shifted card
 		printShiftedCard();
-
+		
+		findMyPinPositionAndTreasurePosition();
+		
 		MoveMessageType moveMessage = new MoveMessageType();
 		PositionType input = new PositionType();
 		input.setCol(0);
@@ -63,7 +65,6 @@ public class OliTaktik implements Taktik {
 		moveMessage.setNewPinPos(myPosition);
 		moveMessage.setShiftCard(shiftCard);
 		// find treasure and pin on board
-		findMyPinPositionAndTreasurePosition();
 		System.out.println("searched card position\n\trow: " + needRow + " column: " + needColumn);
 		System.out.println("my position:\t" + myPosition.getRow() + " " + myPosition.getCol());
 		// is direct way to treasure
