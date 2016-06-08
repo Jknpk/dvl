@@ -27,8 +27,6 @@ public class OliTaktik implements Taktik {
 	private List<TreasureType> foundTreasures;
 	private TreasureType treasure;
 	private List<TreasuresToGoType> treasuresToGo;
-	private int needRow;
-	private int needColumn;
 	private PositionType myPosition;
 	private int ownPlayerId;
 	private CardType shiftCard;
@@ -61,7 +59,7 @@ public class OliTaktik implements Taktik {
 		findMyPinPositionAndTreasurePosition();
 
 		// find treasure and pin on board
-		System.out.println("searched card position\n\trow: " + needRow + " column: " + needColumn);
+		System.out.println("searched card position\n\trow: " + treasurePosition.getRow() + " column: " + treasurePosition.getCol());
 		System.out.println("my position:\t" + myPosition.getRow() + " " + myPosition.getCol());
 
 		// list with all possible moves
@@ -160,11 +158,6 @@ public class OliTaktik implements Taktik {
 		}
 		sb.append("\n");
 		System.out.println(sb.toString());
-	}
-
-	private boolean isDirectWay() {
-		// TODO Auto-generated method stub
-		return false;
 	}
 
 	private void findMyPinPositionAndTreasurePosition() {
