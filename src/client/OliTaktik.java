@@ -5,6 +5,7 @@ package client;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Random;
 
 import generated.AwaitMoveMessageType;
 import generated.BoardType;
@@ -54,13 +55,11 @@ public class OliTaktik implements Taktik {
 
 		// print shifted card
 		printShiftedCard();
-		
+
 		findMyPinPositionAndTreasurePosition();
-		
+
 		MoveMessageType moveMessage = new MoveMessageType();
-		PositionType input = new PositionType();
-		input.setCol(0);
-		input.setRow(1);
+		PositionType input = createRandomPosition();
 		moveMessage.setShiftPosition(input);
 		moveMessage.setNewPinPos(myPosition);
 		moveMessage.setShiftCard(shiftCard);
@@ -79,6 +78,33 @@ public class OliTaktik implements Taktik {
 		}
 
 		return moveMessage;
+	}
+
+	private PositionType createRandomPosition() {
+		PositionType ret = new PositionType();
+		int OBEN = 0;
+		int LINKS = 1;
+		int RECHTS = 2;
+		int UNTEN = 3;
+		Random randomStelle = new Random();
+		int[] possilble = { 1, 3, 5 };
+		Random randomPosition = new Random();
+		int position = randomPosition.nextInt(3);
+		int stelle = randomStelle.nextInt(4);
+		if (stelle == OBEN) {
+			ret.setRow(0);
+			ret.setCol(possilble[position]);
+		} else if (stelle == UNTEN) {
+			ret.setRow(6);
+			ret.setCol(possilble[position]);
+		} else if (stelle == LINKS) {
+			ret.setCol(0);
+			ret.setRow(possilble[position]);
+		} else if (stelle == RECHTS) {
+			ret.setCol(6);
+			ret.setRow(possilble[position]);
+		}
+		return ret;
 	}
 
 	private List<PositionType> possibleMoves() {
