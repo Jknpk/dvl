@@ -10,8 +10,8 @@ import generated.MazeComType;
 public class Game {
 	
 	private Client client;
-	private Taktik taktik = new testTaktik();				// Hier die Taktik festlegen
-//	private Taktik taktik = new OliTaktik();				// Hier die Taktik festlegen
+//	private Taktik taktik = new testTaktik();				// Hier die Taktik festlegen
+	private Taktik taktik = new OliTaktik();				// Hier die Taktik festlegen
 	private MazeComMessageFactory mazeComMessageFactory;
 	
 	public Game(Client client){
@@ -23,9 +23,10 @@ public class Game {
 		
 		while(true){
 			MazeCom mc = client.receiveFromServer();
+			int id = mc.getId();
 			if(mc.getMcType() == MazeComType.AWAITMOVE){
 				// Client ist dran und darf einen Zug schicken 
-				MazeCom mcMM = mazeComMessageFactory.createMoveMessage(client.getId(), taktik.getMove(mc.getAwaitMoveMessage()));
+				MazeCom mcMM = mazeComMessageFactory.createMoveMessage(client.getId(), taktik.getMove(mc.getAwaitMoveMessage(), id));
 				MazeCom mcAnswer = null;
 				try {
 					client.writeToServer(mcMM);

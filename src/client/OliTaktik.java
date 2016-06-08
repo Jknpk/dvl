@@ -3,6 +3,7 @@
  */
 package client;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import generated.AwaitMoveMessageType;
@@ -27,6 +28,8 @@ public class OliTaktik implements Taktik {
 	private List<TreasuresToGoType> treasuresToGo;
 	private int needRow;
 	private int needColumn;
+	private PositionType myPosition;
+	private int ownPlayerId;
 
 	/*
 	 * (non-Javadoc)
@@ -34,13 +37,14 @@ public class OliTaktik implements Taktik {
 	 * @see client.Taktik#getMove(generated.AwaitMoveMessageType)
 	 */
 	@Override
-	public MoveMessageType getMove(AwaitMoveMessageType awaitMoveMessage) {
+	public MoveMessageType getMove(AwaitMoveMessageType awaitMoveMessage, int ownPlayerId) {
 		// TODO Auto-generated method stub
 		board = awaitMoveMessage.getBoard();
 		foundTreasures = awaitMoveMessage.getFoundTreasures();
 		treasure = awaitMoveMessage.getTreasure();
 		treasuresToGo = awaitMoveMessage.getTreasuresToGo();
-
+		this.ownPlayerId = ownPlayerId;
+		myPosition = new PositionType();
 		// print treasure to go
 		System.out.println("Treasure to go: " + treasure.name() + "\n");
 
@@ -57,15 +61,23 @@ public class OliTaktik implements Taktik {
 		findTreasurePosition();
 		System.out.println("searched card position\n\trow: " + needRow + " column: " + needColumn);
 		// is direct way to treasure
+		List<PositionType> positionsToGo = possibleMoves();
+		
 		boolean directWay = isDirectWay();
 		if (directWay) {
 			PositionType position = new PositionType();
-			position.setRow(needColumn);
+			position.setRow(needRow);
 			position.setCol(needColumn);
 			moveMessage.setNewPinPos(position);
 		}
 
 		return moveMessage;
+	}
+
+	private List<PositionType> possibleMoves() {
+		List<PositionType> ret = new ArrayList<>();
+		
+		return ret;
 	}
 
 	private void printShiftedCard() {
@@ -97,6 +109,16 @@ public class OliTaktik implements Taktik {
 		for (int i = 0; i < rows.size(); i++) {
 			List<CardType> col = rows.get(i).getCol();
 			for (int j = 0; j < col.size(); j++) {
+				if ( col.get(j).getPin() != null &&  col.get(j).getPin().getPlayerID() != null) {
+					List<Integer> playerID = col.get(j).getPin().getPlayerID();
+					for (Integer integer : playerID) {
+						if (Integer.valueOf(ownPlayerId) == integer) {
+							myPosition.setRow(i);
+							myPosition.setCol(j);
+							System.out.println("My position:\t" + i + " " + j);
+						}
+					}
+				}
 				if (col.get(j).getTreasure() != null) {
 					sb.append(col.get(j).getTreasure().name() + "   \t");
 				} else {

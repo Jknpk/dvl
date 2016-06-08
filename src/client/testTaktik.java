@@ -12,14 +12,14 @@ import generated.TreasuresToGoType;
 
 public class testTaktik implements Taktik {
 
-	public MoveMessageType getMove(AwaitMoveMessageType awaitMoveMessage) {
+	public MoveMessageType getMove(AwaitMoveMessageType awaitMoveMessage, int ownPlayerId) {
 		BoardType bt = awaitMoveMessage.getBoard();
 		TreasureType tp = awaitMoveMessage.getTreasure();
 		List<TreasureType> ltp = awaitMoveMessage.getFoundTreasures();
 		List<TreasuresToGoType> lttg = awaitMoveMessage.getTreasuresToGo();
 		
-		// Zu dem Ding müssen wir hin!
-		System.out.println("Zu diesem Schatz müssen wir unbedingt hin: "
+		// Zu dem Ding mï¿½ssen wir hin!
+		System.out.println("Zu diesem Schatz mï¿½ssen wir unbedingt hin: "
 				+ tp.name());
 		// Hier hat der letzte Fritze seine Karte reingesteckt
 //		System.out
@@ -27,7 +27,7 @@ public class testTaktik implements Taktik {
 //						+ bt.getForbidden().getCol()
 //						+ "\nZeile: "
 //						+ bt.getForbidden().getRow());
-		// Hier sind die Öffnungen unserer Karte zu sehen
+		// Hier sind die ï¿½ffnungen unserer Karte zu sehen
 		String s = "Neue Reinschiebkarte ist offen nach: ";
 		if(bt.getShiftCard().getOpenings() != null){
 			if (bt.getShiftCard().getOpenings().isTop())
@@ -56,14 +56,14 @@ public class testTaktik implements Taktik {
 		}
 		System.out.println(s);
 	
-		// Gibt die schon gefundenen Schätze aller Spieler aus 
+		// Gibt die schon gefundenen Schï¿½tze aller Spieler aus 
 		for(int i = 0; i < ltp.size(); i++){
 			System.out.println(i+ ": " + ltp.get(i).name());
 		}
 		
 		
 		
-		// So viele Schätze müssen die einzelnen Spieler noch finden!
+		// So viele Schï¿½tze mï¿½ssen die einzelnen Spieler noch finden!
 		for(int i = 0; i < lttg.size(); i++){
 			System.out.println(i+ ": " + lttg.get(i).getTreasures());
 		}
