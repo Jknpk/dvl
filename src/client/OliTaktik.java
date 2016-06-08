@@ -30,6 +30,7 @@ public class OliTaktik implements Taktik {
 	private int needColumn;
 	private PositionType myPosition;
 	private int ownPlayerId;
+	private CardType shiftCard;
 
 	/*
 	 * (non-Javadoc)
@@ -53,16 +54,21 @@ public class OliTaktik implements Taktik {
 
 		// print shifted card
 		printShiftedCard();
-		
-		// TODO print pin position
-		
+
 		MoveMessageType moveMessage = new MoveMessageType();
-		// find treasure on board
-		findTreasurePosition();
+		PositionType input = new PositionType();
+		input.setCol(0);
+		input.setRow(1);
+		moveMessage.setShiftPosition(input);
+		moveMessage.setNewPinPos(myPosition);
+		moveMessage.setShiftCard(shiftCard);
+		// find treasure and pin on board
+		findMyPinPositionAndTreasurePosition();
 		System.out.println("searched card position\n\trow: " + needRow + " column: " + needColumn);
+		System.out.println("my position:\t" + myPosition.getRow() + " " + myPosition.getCol());
 		// is direct way to treasure
 		List<PositionType> positionsToGo = possibleMoves();
-		
+
 		boolean directWay = isDirectWay();
 		if (directWay) {
 			PositionType position = new PositionType();
@@ -76,14 +82,16 @@ public class OliTaktik implements Taktik {
 
 	private List<PositionType> possibleMoves() {
 		List<PositionType> ret = new ArrayList<>();
-		
+		ret.add(myPosition);
+		CardType cardType = board.getRow().get(myPosition.getRow()).getCol().get(myPosition.getCol());
+		Openings openingsMyPosition = cardType.getOpenings();
 		return ret;
 	}
 
 	private void printShiftedCard() {
 		System.out.println("shifted card: ");
 		StringBuilder sb = new StringBuilder();
-		CardType shiftCard = board.getShiftCard();
+		shiftCard = board.getShiftCard();
 		Openings openings = shiftCard.getOpenings();
 		sb.append("\topen to: ");
 		if (openings.isBottom()) {
@@ -109,16 +117,6 @@ public class OliTaktik implements Taktik {
 		for (int i = 0; i < rows.size(); i++) {
 			List<CardType> col = rows.get(i).getCol();
 			for (int j = 0; j < col.size(); j++) {
-				if ( col.get(j).getPin() != null &&  col.get(j).getPin().getPlayerID() != null) {
-					List<Integer> playerID = col.get(j).getPin().getPlayerID();
-					for (Integer integer : playerID) {
-						if (Integer.valueOf(ownPlayerId) == integer) {
-							myPosition.setRow(i);
-							myPosition.setCol(j);
-							System.out.println("My position:\t" + i + " " + j);
-						}
-					}
-				}
 				if (col.get(j).getTreasure() != null) {
 					sb.append(col.get(j).getTreasure().name() + "   \t");
 				} else {
@@ -136,11 +134,21 @@ public class OliTaktik implements Taktik {
 		return false;
 	}
 
-	private void findTreasurePosition() {
+	private void findMyPinPositionAndTreasurePosition() {
 		List<Row> rows = board.getRow();
 		for (int i = 0; i < rows.size(); i++) {
 			List<CardType> cols = rows.get(i).getCol();
 			for (int j = 0; j < cols.size(); j++) {
+				if (cols.get(j).getPin() != null && cols.get(j).getPin().getPlayerID() != null) {
+					List<Integer> playerID = cols.get(j).getPin().getPlayerID();
+					for (Integer integer : playerID) {
+						if (Integer.valueOf(ownPlayerId) == integer) {
+							myPosition.setRow(i);
+							myPosition.setCol(j);
+						}
+					}
+				}
+
 				if (cols.get(j).getTreasure() != null && cols.get(j).getTreasure().name().equals(treasure.name())) {
 					needRow = i;
 					needColumn = j;
