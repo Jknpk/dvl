@@ -32,6 +32,7 @@ public class OliTaktik implements Taktik {
 	private PositionType myPosition;
 	private int ownPlayerId;
 	private CardType shiftCard;
+	private PositionType treasurePosition;
 
 	/*
 	 * (non-Javadoc)
@@ -47,6 +48,7 @@ public class OliTaktik implements Taktik {
 		treasuresToGo = awaitMoveMessage.getTreasuresToGo();
 		this.ownPlayerId = ownPlayerId;
 		myPosition = new PositionType();
+		treasurePosition = new PositionType();
 		// print treasure to go
 		System.out.println("Treasure to go: " + treasure.name() + "\n");
 
@@ -58,25 +60,26 @@ public class OliTaktik implements Taktik {
 
 		findMyPinPositionAndTreasurePosition();
 
-		MoveMessageType moveMessage = new MoveMessageType();
-		PositionType input = createRandomPosition();
-		moveMessage.setShiftPosition(input);
-		moveMessage.setNewPinPos(myPosition);
-		moveMessage.setShiftCard(shiftCard);
 		// find treasure and pin on board
 		System.out.println("searched card position\n\trow: " + needRow + " column: " + needColumn);
 		System.out.println("my position:\t" + myPosition.getRow() + " " + myPosition.getCol());
-		// is direct way to treasure
+
+		// list with all possible moves
 		List<PositionType> positionsToGo = possibleMoves();
 
-		boolean directWay = isDirectWay();
-		if (directWay) {
-			PositionType position = new PositionType();
-			position.setRow(needRow);
-			position.setCol(needColumn);
-			moveMessage.setNewPinPos(position);
+		// check if i can go direct to treasure position
+		for (PositionType positionType : positionsToGo) {
+			if (positionType.getCol() == treasurePosition.getCol()
+					&& positionType.getRow() == treasurePosition.getRow()) {
+				myPosition = treasurePosition;
+			}
 		}
 
+		MoveMessageType moveMessage = new MoveMessageType();
+		PositionType input = createRandomPosition();
+		moveMessage.setShiftPosition(input);
+		moveMessage.setShiftCard(shiftCard);
+		moveMessage.setNewPinPos(myPosition);
 		return moveMessage;
 	}
 
@@ -110,8 +113,11 @@ public class OliTaktik implements Taktik {
 	private List<PositionType> possibleMoves() {
 		List<PositionType> ret = new ArrayList<>();
 		ret.add(myPosition);
-		CardType cardType = board.getRow().get(myPosition.getRow()).getCol().get(myPosition.getCol());
+		PositionType tmp = new PositionType();
+		tmp = myPosition;
+		CardType cardType = board.getRow().get(tmp.getRow()).getCol().get(tmp.getCol());
 		Openings openingsMyPosition = cardType.getOpenings();
+		// TODO go throuhg all possible cards and change the position in ret
 		return ret;
 	}
 
@@ -177,8 +183,8 @@ public class OliTaktik implements Taktik {
 				}
 
 				if (cols.get(j).getTreasure() != null && cols.get(j).getTreasure().name().equals(treasure.name())) {
-					needRow = i;
-					needColumn = j;
+					treasurePosition.setRow(i);
+					treasurePosition.setCol(j);
 					return;
 				}
 			}
