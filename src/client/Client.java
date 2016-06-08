@@ -19,6 +19,8 @@ import networking.UTFOutputStream;
 
 public class Client {
 	
+	private static final String PORT = "5123";
+	private static final String HOST = "127.0.0.1";
 	private String ip;
 	private String port;
 	private Socket clientSocket;
@@ -100,7 +102,7 @@ public class Client {
 		try{
 			client = new Client(args[0], args[1]);
 		} catch (ArrayIndexOutOfBoundsException e){
-			client = new Client("127.0.0.1", "5123");	//Defaultwerte
+			client = new Client(HOST, PORT);	//Defaultwerte
 		}	
 		client.connect();
 	}
