@@ -68,6 +68,7 @@ public class Client {
 	
 	
 	public void writeToServer(MazeCom mc) throws SocketException{
+		byteArrayOutputStream = new ByteArrayOutputStream();
 		try {
 			marshaller.marshal(mc, byteArrayOutputStream);
 			String string = new String(byteArrayOutputStream.toByteArray());
