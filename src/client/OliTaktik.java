@@ -59,18 +59,24 @@ public class OliTaktik implements Taktik {
 		findMyPinPositionAndTreasurePosition();
 
 		// find treasure and pin on board
-		System.out.println("searched card position\n\trow: " + treasurePosition.getRow() + " column: " + treasurePosition.getCol());
+		System.out.println("searched card position\n\trow: " + treasurePosition.getRow() + " column: "
+				+ treasurePosition.getCol());
 		System.out.println("my position:\t" + myPosition.getRow() + " " + myPosition.getCol());
 
 		// list with all possible moves
 		List<PositionType> positionsToGo = possibleMoves();
-
+		System.err.println(positionsToGo.size());
 		// check if i can go direct to treasure position
+		boolean direct = false;
 		for (PositionType positionType : positionsToGo) {
 			if (positionType.getCol() == treasurePosition.getCol()
 					&& positionType.getRow() == treasurePosition.getRow()) {
 				myPosition = treasurePosition;
+				direct = true;
 			}
+		}
+		if (!direct) {
+
 		}
 
 		MoveMessageType moveMessage = new MoveMessageType();
@@ -110,13 +116,131 @@ public class OliTaktik implements Taktik {
 
 	private List<PositionType> possibleMoves() {
 		List<PositionType> ret = new ArrayList<>();
-		ret.add(myPosition);
+		// ret.add(myPosition);
 		PositionType tmp = new PositionType();
-		tmp = myPosition;
+		tmp.setCol(myPosition.getCol());
+		tmp.setRow(myPosition.getRow());
+		// TODO go throuhg all possible cards and add the position to ret
+		findPositions(tmp, ret);
+		return ret;
+	}
+
+	private void findPositions(PositionType tmp, List<PositionType> ret) {
 		CardType cardType = board.getRow().get(tmp.getRow()).getCol().get(tmp.getCol());
 		Openings openingsMyPosition = cardType.getOpenings();
-		// TODO go throuhg all possible cards and change the position in ret
-		return ret;
+		ret.add(tmp);
+		System.out.println("can go to " + tmp.getRow() + "\t" + tmp.getCol());
+		// TODO check ob die andere karte für uns offen ist!
+		if (openingsMyPosition.isBottom()) {
+			bottem(tmp, ret);
+		}
+		if (openingsMyPosition.isLeft()) {
+			left(tmp, ret);
+		}
+		if (openingsMyPosition.isRight()) {
+			rigth(tmp, ret);
+		}
+		if (openingsMyPosition.isTop()) {
+			top(tmp, ret);
+
+		}
+	}
+
+	private void top(PositionType tmp, List<PositionType> ret) {
+		if (tmp.getRow() == 0) {
+			if (board.getRow().get(6).getCol().get(tmp.getCol()).getOpenings().isBottom()) {
+				PositionType newPos = new PositionType();
+				newPos.setCol(tmp.getCol());
+				newPos.setRow(6);
+				if (!positionInRet(newPos, ret)) {
+					findPositions(newPos, ret);
+				}
+			}
+		} else {
+			if (board.getRow().get(tmp.getRow() - 1).getCol().get(tmp.getCol()).getOpenings().isBottom()) {
+				PositionType newPos = new PositionType();
+				newPos.setCol(tmp.getCol());
+				newPos.setRow(tmp.getRow() - 1);
+				if (!positionInRet(newPos, ret)) {
+					findPositions(newPos, ret);
+				}
+			}
+		}
+	}
+
+	private void rigth(PositionType tmp, List<PositionType> ret) {
+		if (tmp.getCol() == 6) {
+			if (board.getRow().get(tmp.getRow()).getCol().get(0).getOpenings().isLeft()) {
+				PositionType newPos = new PositionType();
+				newPos.setCol(0);
+				newPos.setRow(tmp.getRow());
+				if (!positionInRet(newPos, ret)) {
+					findPositions(newPos, ret);
+				}
+			}
+		} else {
+			if (board.getRow().get(tmp.getRow()).getCol().get(tmp.getCol() + 1).getOpenings().isLeft()) {
+				PositionType newPos = new PositionType();
+				newPos.setCol(tmp.getCol() + 1);
+				newPos.setRow(tmp.getRow());
+				if (!positionInRet(newPos, ret)) {
+					findPositions(newPos, ret);
+				}
+			}
+		}
+	}
+
+	private void left(PositionType tmp, List<PositionType> ret) {
+		if (tmp.getCol() == 0) {
+			if (board.getRow().get(tmp.getRow()).getCol().get(6).getOpenings().isRight()) {
+				PositionType newPos = new PositionType();
+				newPos.setCol(0);
+				newPos.setRow(tmp.getRow());
+				if (!positionInRet(newPos, ret)) {
+					findPositions(newPos, ret);
+				}
+			}
+		} else {
+			if (board.getRow().get(tmp.getRow()).getCol().get(tmp.getCol() - 1).getOpenings().isRight()) {
+				PositionType newPos = new PositionType();
+				newPos.setCol(tmp.getCol() - 1);
+				newPos.setRow(tmp.getRow());
+				if (!positionInRet(newPos, ret)) {
+					findPositions(newPos, ret);
+				}
+			}
+		}
+	}
+
+	private boolean positionInRet(PositionType newPos, List<PositionType> ret) {
+		for (PositionType positionType : ret) {
+			if (newPos.getRow() == positionType.getRow() && newPos.getCol() == positionType.getCol()) {
+				return true;
+			}
+		}
+		return false;
+	}
+
+	private void bottem(PositionType tmp, List<PositionType> ret) {
+		if (tmp.getRow() == 6) {
+			if (board.getRow().get(0).getCol().get(tmp.getCol()).getOpenings().isTop()) {
+				ret.add(tmp);
+				PositionType newPos = new PositionType();
+				newPos.setCol(tmp.getCol());
+				newPos.setRow(0);
+				if (!positionInRet(newPos, ret)) {
+					findPositions(newPos, ret);
+				}
+			}
+		} else if (board.getRow().get(tmp.getRow() + 1).getCol().get(tmp.getCol()).getOpenings().isTop()) {
+			ret.add(tmp);
+			PositionType newPos = new PositionType();
+			newPos.setCol(tmp.getCol());
+			newPos.setRow(tmp.getRow() + 1);
+			if (!positionInRet(newPos, ret)) {
+				findPositions(newPos, ret);
+			}
+		}
 	}
 
 	private void printShiftedCard() {
