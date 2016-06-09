@@ -50,7 +50,6 @@ public class OliTaktik implements Taktik {
 		BoardGenerator generator = new BoardGenerator(board);
 		// print treasure to go
 		System.out.println("Treasure to go: " + treasure.name() + "\n");
-
 		// print board
 		printBoard();
 
@@ -59,6 +58,7 @@ public class OliTaktik implements Taktik {
 
 		// shift board to get acutely board after shifting
 		PositionType input = createRandomPositionForShiftedCard();
+		// TODO my set position after shifting
 
 		System.out.println(input.getRow());
 		System.out.println(input.getCol());
