@@ -6,8 +6,8 @@ import java.io.OutputStream;
 import javax.swing.JTextArea;
 import javax.swing.SwingUtilities;
 
-import tools.DebugLevel;
 import config.Settings;
+import tools.DebugLevel;
 
 public class StreamToTextArea extends OutputStream {
 
@@ -76,7 +76,8 @@ public class StreamToTextArea extends OutputStream {
 	}
 
 	public void write(int[] bytes, int offset, int length) {
-		// System.out.println("bytes: "+bytes+"offset: "+offset+"length: "+length);
+		// System.out.println("bytes: "+bytes+"offset: "+offset+"length:
+		// "+length);
 		String s = new String(bytes, offset, length);
 		if (s.equals("\r")) //$NON-NLS-1$
 			return;
@@ -85,8 +86,7 @@ public class StreamToTextArea extends OutputStream {
 			SwingUtilities.invokeLater(new Runnable() {
 				public void run() {
 					textArea.append(text);
-					textArea.setCaretPosition(textArea.getDocument()
-							.getLength());
+					textArea.setCaretPosition(textArea.getDocument().getLength());
 				}
 			});
 			sb.setLength(0);
@@ -107,8 +107,7 @@ public class StreamToTextArea extends OutputStream {
 			SwingUtilities.invokeLater(new Runnable() {
 				public void run() {
 					textArea.append(text);
-					textArea.setCaretPosition(textArea.getDocument()
-							.getLength());
+					textArea.setCaretPosition(textArea.getDocument().getLength());
 				}
 			});
 			sb.setLength(0);

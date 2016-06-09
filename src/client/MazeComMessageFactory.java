@@ -37,8 +37,7 @@ public class MazeComMessageFactory {
 		return mc;
 	}
 
-	public MazeCom createWinMessage(int playerID, int winnerId, String name,
-			Board b) {
+	public MazeCom createWinMessage(int playerID, int winnerId, String name, Board b) {
 		MazeCom mc = of.createMazeCom();
 		mc.setMcType(MazeComType.WIN);
 		mc.setId(playerID);
@@ -51,8 +50,7 @@ public class MazeComMessageFactory {
 		return mc;
 	}
 
-	public MazeCom createDisconnectMessage(int playerID, String name,
-			ErrorType et) {
+	public MazeCom createDisconnectMessage(int playerID, String name, ErrorType et) {
 		MazeCom mc = of.createMazeCom();
 		mc.setMcType(MazeComType.DISCONNECT);
 		mc.setId(playerID);
@@ -62,16 +60,15 @@ public class MazeComMessageFactory {
 		return mc;
 	}
 
-	public MazeCom createAwaitMoveMessage(HashMap<Integer, Player> Player,
-			Integer currPlayer, Board brett, List<TreasureType> foundTreasures) {
+	public MazeCom createAwaitMoveMessage(HashMap<Integer, Player> Player, Integer currPlayer, Board brett,
+			List<TreasureType> foundTreasures) {
 		MazeCom mc = of.createMazeCom();
 		mc.setMcType(MazeComType.AWAITMOVE);
 		mc.setId(Player.get(currPlayer).getID());
 		mc.setAwaitMoveMessage(of.createAwaitMoveMessageType());
 		// Brett uebergeben
 		mc.getAwaitMoveMessage().setBoard(brett);
-		mc.getAwaitMoveMessage().setTreasure(
-				Player.get(currPlayer).getCurrentTreasure());
+		mc.getAwaitMoveMessage().setTreasure(Player.get(currPlayer).getCurrentTreasure());
 		mc.getAwaitMoveMessage().getFoundTreasures().addAll(foundTreasures);
 		for (Integer playerID : Player.keySet()) {
 			TreasuresToGoType ttg = of.createTreasuresToGoType();

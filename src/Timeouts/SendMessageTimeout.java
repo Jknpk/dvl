@@ -1,9 +1,8 @@
 package Timeouts;
 
-import generated.ErrorType;
-
 import java.util.TimerTask;
 
+import generated.ErrorType;
 import networking.Connection;
 
 public class SendMessageTimeout extends TimerTask {

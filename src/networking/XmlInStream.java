@@ -1,7 +1,5 @@
 package networking;
 
-import generated.MazeCom;
-
 import java.io.ByteArrayInputStream;
 import java.io.File;
 import java.io.FileNotFoundException;
@@ -19,6 +17,7 @@ import javax.xml.validation.SchemaFactory;
 
 import org.xml.sax.SAXException;
 
+import generated.MazeCom;
 import tools.Debug;
 import tools.DebugLevel;
 
@@ -32,18 +31,16 @@ public class XmlInStream extends UTFInputStream {
 			JAXBContext jaxbContext = JAXBContext.newInstance(MazeCom.class);
 			unmarshaller = jaxbContext.createUnmarshaller();
 
-			SchemaFactory schemaFactory = SchemaFactory
-					.newInstance(XMLConstants.W3C_XML_SCHEMA_NS_URI);
+			SchemaFactory schemaFactory = SchemaFactory.newInstance(XMLConstants.W3C_XML_SCHEMA_NS_URI);
 			try {
 				// muss getResourceAsStream() statt getResource() sein
 				// damit es auch in jars funktioniert
-				InputStream resourceAsStream = getClass().getResourceAsStream(
-						"/XSD/mazeCom.xsd"); //$NON-NLS-1$
+				InputStream resourceAsStream = getClass().getResourceAsStream("/XSD/mazeCom.xsd"); //$NON-NLS-1$
 
-				// convert inputstream to file, no better implementation available
-				File tempFile = File.createTempFile("temp", ".xsd");  //$NON-NLS-1$//$NON-NLS-2$
-				FileOutputStream fileOutputStream = new FileOutputStream(
-						tempFile);
+				// convert inputstream to file, no better implementation
+				// available
+				File tempFile = File.createTempFile("temp", ".xsd"); //$NON-NLS-1$//$NON-NLS-2$
+				FileOutputStream fileOutputStream = new FileOutputStream(tempFile);
 				int read = 0;
 				byte[] b = new byte[1024];
 				while ((read = resourceAsStream.read(b)) != -1) {
@@ -56,8 +53,7 @@ public class XmlInStream extends UTFInputStream {
 				tempFile.deleteOnExit();
 			} catch (SAXException e) {
 				e.printStackTrace();
-				Debug.print(
-						Messages.getString("XmlInStream.XMLSchemaFailed"), //$NON-NLS-1$
+				Debug.print(Messages.getString("XmlInStream.XMLSchemaFailed"), //$NON-NLS-1$
 						DebugLevel.DEFAULT);
 			} catch (FileNotFoundException e) {
 				e.printStackTrace();
@@ -65,8 +61,7 @@ public class XmlInStream extends UTFInputStream {
 				e.printStackTrace();
 			}
 		} catch (JAXBException e) {
-			Debug.print(Messages
-					.getString("XmlInStream.errorInitialisingJAXBComponent"), //$NON-NLS-1$
+			Debug.print(Messages.getString("XmlInStream.errorInitialisingJAXBComponent"), //$NON-NLS-1$
 					DebugLevel.DEFAULT);
 		}
 	}
@@ -82,8 +77,7 @@ public class XmlInStream extends UTFInputStream {
 		MazeCom result = null;
 		try {
 			String xml = this.readUTF8();
-			Debug.print(
-					Messages.getString("XmlInStream.received"), DebugLevel.DEBUG); //$NON-NLS-1$
+			Debug.print(Messages.getString("XmlInStream.received"), DebugLevel.DEBUG); //$NON-NLS-1$
 			Debug.print(xml, DebugLevel.DEBUG);
 			bytes = xml.getBytes();
 			ByteArrayInputStream bais = new ByteArrayInputStream(bytes);
@@ -95,8 +89,7 @@ public class XmlInStream extends UTFInputStream {
 			Debug.print(Messages.getString("XmlInStream.errorUnmarshalling"), //$NON-NLS-1$
 					DebugLevel.DEFAULT);
 		} catch (NullPointerException e) {
-			Debug.print(
-					Messages.getString("XmlInStream.nullpointerWhileReading"), //$NON-NLS-1$
+			Debug.print(Messages.getString("XmlInStream.nullpointerWhileReading"), //$NON-NLS-1$
 					DebugLevel.DEFAULT);
 		}
 		return result;

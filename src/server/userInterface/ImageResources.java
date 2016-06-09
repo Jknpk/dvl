@@ -19,8 +19,7 @@ public class ImageResources {
 		if (images.containsKey(name)) {
 			return images.get(name);
 		}
-		URL u = ImageResources.class.getResource(Settings.IMAGEPATH + name
-				+ Settings.IMAGEFILEEXTENSION);
+		URL u = ImageResources.class.getResource(Settings.IMAGEPATH + name + Settings.IMAGEFILEEXTENSION);
 		Image img = null;
 		try {
 			img = ImageIO.read(u);

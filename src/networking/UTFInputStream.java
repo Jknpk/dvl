@@ -16,7 +16,8 @@ public class UTFInputStream {
 
 	public String readUTF8() throws IOException {
 		ByteBuffer bf = ByteBuffer.wrap(this.readNBytes(4));
-		bf.order(ByteOrder.BIG_ENDIAN); // Java always use hostorder. See javadoc
+		bf.order(ByteOrder.BIG_ENDIAN); // Java always use hostorder. See
+										// javadoc
 		byte[] bytes = this.readNBytes(bf.getInt(0));
 		return new String(bytes, "UTF-8"); //$NON-NLS-1$
 	}
@@ -35,8 +36,7 @@ public class UTFInputStream {
 		while (readcount < n) {
 			lastreadcount = this.is.read(buf, readcount, n - readcount);
 			if (lastreadcount == -1) {
-				throw new EOFException(String.format(
-						Messages.getString("UTFInputStream.EOFException"), //$NON-NLS-1$
+				throw new EOFException(String.format(Messages.getString("UTFInputStream.EOFException"), //$NON-NLS-1$
 						readcount, n));
 			}
 			readcount += lastreadcount;

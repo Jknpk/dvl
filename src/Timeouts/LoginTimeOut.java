@@ -16,6 +16,5 @@ public class LoginTimeOut extends TimerTask {
 	public void run() {
 		currentGame.closeServerSocket();
 	}
-	
 
 }

@@ -79,8 +79,7 @@ public class GraphicalBoard extends JPanel {
 			paintBuffer = null;
 			return;
 		}
-		BufferedImage buff = new BufferedImage(w, h,
-				BufferedImage.TYPE_INT_ARGB_PRE);
+		BufferedImage buff = new BufferedImage(w, h, BufferedImage.TYPE_INT_ARGB_PRE);
 		Graphics2D g2 = buff.createGraphics();
 		super.paintComponent(g2);
 		paintBuffer = new TexturePaint(buff, new Rectangle(0, 0, w, h));
@@ -108,8 +107,7 @@ public class GraphicalBoard extends JPanel {
 	}
 
 	public void blink(Position insertPos, long millis) {
-		boardDisplay[insertPos.getRow()][insertPos.getCol()].blinkCard(millis,
-				3);
+		boardDisplay[insertPos.getRow()][insertPos.getCol()].blinkCard(millis, 3);
 	}
 
 	// public void blink(Integer playerID,long millis) {

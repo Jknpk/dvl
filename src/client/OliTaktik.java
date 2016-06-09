@@ -86,7 +86,7 @@ public class OliTaktik implements Taktik {
 			}
 		}
 		if (!direct) {
-//			myPosition = positionsToGo.get(positionsToGo.size() - 1);
+			// myPosition = positionsToGo.get(positionsToGo.size() - 1);
 		}
 
 		MoveMessageType moveMessage = new MoveMessageType();

@@ -17,19 +17,19 @@ public class testTaktik implements Taktik {
 		TreasureType tp = awaitMoveMessage.getTreasure();
 		List<TreasureType> ltp = awaitMoveMessage.getFoundTreasures();
 		List<TreasuresToGoType> lttg = awaitMoveMessage.getTreasuresToGo();
-		
+
 		// Zu dem Ding m�ssen wir hin!
-		System.out.println("Zu diesem Schatz m�ssen wir unbedingt hin: "
-				+ tp.name());
+		System.out.println("Zu diesem Schatz m�ssen wir unbedingt hin: " + tp.name());
 		// Hier hat der letzte Fritze seine Karte reingesteckt
-//		System.out
-//				.println("Verboten die neue Reinschieb-Karte reinzustecken::\nSpalte: "
-//						+ bt.getForbidden().getCol()
-//						+ "\nZeile: "
-//						+ bt.getForbidden().getRow());
+		// System.out
+		// .println("Verboten die neue Reinschieb-Karte reinzustecken::\nSpalte:
+		// "
+		// + bt.getForbidden().getCol()
+		// + "\nZeile: "
+		// + bt.getForbidden().getRow());
 		// Hier sind die �ffnungen unserer Karte zu sehen
 		String s = "Neue Reinschiebkarte ist offen nach: ";
-		if(bt.getShiftCard().getOpenings() != null){
+		if (bt.getShiftCard().getOpenings() != null) {
 			if (bt.getShiftCard().getOpenings().isTop())
 				s += "oben ";
 			if (bt.getShiftCard().getOpenings().isRight())
@@ -40,39 +40,31 @@ public class testTaktik implements Taktik {
 				s += "links ";
 			System.out.println(s);
 		}
-		
+
 		s = "Spielfeld: \n";
-		for(int i = 0; i < bt.getRow().size(); i++){
-			for(int j = 0; j < bt.getRow().size(); j++){
-				if(bt.getRow().get(i).getCol().get(j).getTreasure() != null){
+		for (int i = 0; i < bt.getRow().size(); i++) {
+			for (int j = 0; j < bt.getRow().size(); j++) {
+				if (bt.getRow().get(i).getCol().get(j).getTreasure() != null) {
 					s += bt.getRow().get(i).getCol().get(j).getTreasure().name() + "\t";
-				}
-				else{
+				} else {
 					s += "\t";
 				}
-				
+
 			}
-			s+= "\n";
+			s += "\n";
 		}
 		System.out.println(s);
-	
-		// Gibt die schon gefundenen Sch�tze aller Spieler aus 
-		for(int i = 0; i < ltp.size(); i++){
-			System.out.println(i+ ": " + ltp.get(i).name());
+
+		// Gibt die schon gefundenen Sch�tze aller Spieler aus
+		for (int i = 0; i < ltp.size(); i++) {
+			System.out.println(i + ": " + ltp.get(i).name());
 		}
-		
-		
-		
+
 		// So viele Sch�tze m�ssen die einzelnen Spieler noch finden!
-		for(int i = 0; i < lttg.size(); i++){
-			System.out.println(i+ ": " + lttg.get(i).getTreasures());
+		for (int i = 0; i < lttg.size(); i++) {
+			System.out.println(i + ": " + lttg.get(i).getTreasures());
 		}
-		
-		
-		
-		
-		
-		
+
 		PositionType newPinPos = new PositionType();
 		newPinPos.setCol(0);
 		newPinPos.setRow(0);

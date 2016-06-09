@@ -5,18 +5,19 @@
 // Generiert: 2015.05.27 um 09:04:47 AM CEST 
 //
 
-
 package generated;
 
 import javax.xml.bind.annotation.XmlAccessType;
 import javax.xml.bind.annotation.XmlAccessorType;
 import javax.xml.bind.annotation.XmlType;
 
-
 /**
- * <p>Java-Klasse für positionType complex type.
+ * <p>
+ * Java-Klasse für positionType complex type.
  * 
- * <p>Das folgende Schemafragment gibt den erwarteten Content an, der in dieser Klasse enthalten ist.
+ * <p>
+ * Das folgende Schemafragment gibt den erwarteten Content an, der in dieser
+ * Klasse enthalten ist.
  * 
  * <pre>
  * &lt;complexType name="positionType">
@@ -34,45 +35,42 @@ import javax.xml.bind.annotation.XmlType;
  * 
  */
 @XmlAccessorType(XmlAccessType.FIELD)
-@XmlType(name = "positionType", propOrder = {
-    "row",
-    "col"
-})
+@XmlType(name = "positionType", propOrder = { "row", "col" })
 public class PositionType {
 
-    protected int row;
-    protected int col;
+	protected int row;
+	protected int col;
 
-    /**
-     * Ruft den Wert der row-Eigenschaft ab.
-     * 
-     */
-    public int getRow() {
-        return row;
-    }
+	/**
+	 * Ruft den Wert der row-Eigenschaft ab.
+	 * 
+	 */
+	public int getRow() {
+		return row;
+	}
 
-    /**
-     * Legt den Wert der row-Eigenschaft fest.
-     * 
-     */
-    public void setRow(int value) {
-        this.row = value;
-    }
+	/**
+	 * Legt den Wert der row-Eigenschaft fest.
+	 * 
+	 */
+	public void setRow(int value) {
+		this.row = value;
+	}
 
-    /**
-     * Ruft den Wert der col-Eigenschaft ab.
-     * 
-     */
-    public int getCol() {
-        return col;
-    }
+	/**
+	 * Ruft den Wert der col-Eigenschaft ab.
+	 * 
+	 */
+	public int getCol() {
+		return col;
+	}
 
-    /**
-     * Legt den Wert der col-Eigenschaft fest.
-     * 
-     */
-    public void setCol(int value) {
-        this.col = value;
-    }
+	/**
+	 * Legt den Wert der col-Eigenschaft fest.
+	 * 
+	 */
+	public void setCol(int value) {
+		this.col = value;
+	}
 
 }

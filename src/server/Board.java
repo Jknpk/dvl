@@ -1,5 +1,11 @@
 package server;
 
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
+import java.util.Random;
+
+import config.Settings;
 import generated.BoardType;
 import generated.CardType;
 import generated.CardType.Openings;
@@ -7,13 +13,6 @@ import generated.CardType.Pin;
 import generated.MoveMessageType;
 import generated.PositionType;
 import generated.TreasureType;
-
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
-import java.util.Random;
-
-import config.Settings;
 import server.Card.CardShape;
 import server.Card.Orientation;
 import tools.Debug;
@@ -28,14 +27,13 @@ public class Board extends BoardType {
 	 * Board <b>nicht</b> gesetzt, da es keine Objektvariable von BoardType ist
 	 * 
 	 * @param boardType
-	 *            Instanz von BoardType, aus der eine Instanz von Board generiert
-	 *            wird
+	 *            Instanz von BoardType, aus der eine Instanz von Board
+	 *            generiert wird
 	 */
 	public Board(BoardType boardType) {
 		super();
 		PositionType forbiddenPositionType = boardType.getForbidden();
-		forbidden = (forbiddenPositionType != null) ? new Position(
-				forbiddenPositionType) : null;
+		forbidden = (forbiddenPositionType != null) ? new Position(forbiddenPositionType) : null;
 		shiftCard = new Card(boardType.getShiftCard());
 		// XXX: Warum? Initialisierung?
 		this.getRow();
@@ -45,12 +43,7 @@ public class Board extends BoardType {
 			for (int j = 0; j < 7; j++) {
 				// new Card, damit keine Referenzen, sondern richte Kopien
 				// erstellt werden
-				this.getRow()
-						.get(i)
-						.getCol()
-						.add(j,
-								new Card(boardType.getRow().get(i).getCol()
-										.get(j)));
+				this.getRow().get(i).getCol().add(j, new Card(boardType.getRow().get(i).getCol().get(j)));
 			}
 		}
 		// es darf keine boardinitialisierung mehr durchgefuehrt werden, da
@@ -66,8 +59,7 @@ public class Board extends BoardType {
 			this.getRow().add(i, new Row());
 			this.getRow().get(i).getCol();
 			for (int j = 0; j < 7; j++) {
-				this.getRow().get(i).getCol()
-						.add(j, new Card(CardShape.I, Orientation.D0, null));
+				this.getRow().get(i).getCol().add(j, new Card(CardShape.I, Orientation.D0, null));
 			}
 
 		}
@@ -79,32 +71,20 @@ public class Board extends BoardType {
 		// fixedCards:
 		// Die festen, unveraenderbaren Karten auf dem Spielbrett
 		setCard(0, 0, new Card(CardShape.L, Orientation.D90, null));
-		setCard(0, 2,
-				new Card(CardShape.T, Orientation.D0, TreasureType.SYM_13));
-		setCard(0, 4,
-				new Card(CardShape.T, Orientation.D0, TreasureType.SYM_14));
+		setCard(0, 2, new Card(CardShape.T, Orientation.D0, TreasureType.SYM_13));
+		setCard(0, 4, new Card(CardShape.T, Orientation.D0, TreasureType.SYM_14));
 		setCard(0, 6, new Card(CardShape.L, Orientation.D180, null));
-		setCard(2, 0, new Card(CardShape.T, Orientation.D270,
-				TreasureType.SYM_15));
-		setCard(2, 2, new Card(CardShape.T, Orientation.D270,
-				TreasureType.SYM_16));
-		setCard(2, 4,
-				new Card(CardShape.T, Orientation.D0, TreasureType.SYM_17));
-		setCard(2, 6, new Card(CardShape.T, Orientation.D90,
-				TreasureType.SYM_18));
-		setCard(4, 0, new Card(CardShape.T, Orientation.D270,
-				TreasureType.SYM_19));
-		setCard(4, 2, new Card(CardShape.T, Orientation.D180,
-				TreasureType.SYM_20));
-		setCard(4, 4, new Card(CardShape.T, Orientation.D90,
-				TreasureType.SYM_21));
-		setCard(4, 6, new Card(CardShape.T, Orientation.D90,
-				TreasureType.SYM_22));
+		setCard(2, 0, new Card(CardShape.T, Orientation.D270, TreasureType.SYM_15));
+		setCard(2, 2, new Card(CardShape.T, Orientation.D270, TreasureType.SYM_16));
+		setCard(2, 4, new Card(CardShape.T, Orientation.D0, TreasureType.SYM_17));
+		setCard(2, 6, new Card(CardShape.T, Orientation.D90, TreasureType.SYM_18));
+		setCard(4, 0, new Card(CardShape.T, Orientation.D270, TreasureType.SYM_19));
+		setCard(4, 2, new Card(CardShape.T, Orientation.D180, TreasureType.SYM_20));
+		setCard(4, 4, new Card(CardShape.T, Orientation.D90, TreasureType.SYM_21));
+		setCard(4, 6, new Card(CardShape.T, Orientation.D90, TreasureType.SYM_22));
 		setCard(6, 0, new Card(CardShape.L, Orientation.D0, null));
-		setCard(6, 2, new Card(CardShape.T, Orientation.D180,
-				TreasureType.SYM_23));
-		setCard(6, 4, new Card(CardShape.T, Orientation.D180,
-				TreasureType.SYM_24));
+		setCard(6, 2, new Card(CardShape.T, Orientation.D180, TreasureType.SYM_23));
+		setCard(6, 4, new Card(CardShape.T, Orientation.D180, TreasureType.SYM_24));
 		setCard(6, 6, new Card(CardShape.L, Orientation.D270, null));
 
 		// die freien verschiebbaren Teile auf dem Spielbrett
@@ -114,43 +94,29 @@ public class Board extends BoardType {
 			random.setSeed(Settings.TESTBOARD_SEED);
 		}
 		// 15 mal L-shape (6 (sym) + 9 (ohne))
-		freeCards.add(new Card(CardShape.L, Orientation.fromValue(random
-				.nextInt(4) * 90), TreasureType.SYM_01));
-		freeCards.add(new Card(CardShape.L, Orientation.fromValue(random
-				.nextInt(4) * 90), TreasureType.SYM_02));
-		freeCards.add(new Card(CardShape.L, Orientation.fromValue(random
-				.nextInt(4) * 90), TreasureType.SYM_03));
-		freeCards.add(new Card(CardShape.L, Orientation.fromValue(random
-				.nextInt(4) * 90), TreasureType.SYM_04));
-		freeCards.add(new Card(CardShape.L, Orientation.fromValue(random
-				.nextInt(4) * 90), TreasureType.SYM_05));
-		freeCards.add(new Card(CardShape.L, Orientation.fromValue(random
-				.nextInt(4) * 90), TreasureType.SYM_06));
+		freeCards.add(new Card(CardShape.L, Orientation.fromValue(random.nextInt(4) * 90), TreasureType.SYM_01));
+		freeCards.add(new Card(CardShape.L, Orientation.fromValue(random.nextInt(4) * 90), TreasureType.SYM_02));
+		freeCards.add(new Card(CardShape.L, Orientation.fromValue(random.nextInt(4) * 90), TreasureType.SYM_03));
+		freeCards.add(new Card(CardShape.L, Orientation.fromValue(random.nextInt(4) * 90), TreasureType.SYM_04));
+		freeCards.add(new Card(CardShape.L, Orientation.fromValue(random.nextInt(4) * 90), TreasureType.SYM_05));
+		freeCards.add(new Card(CardShape.L, Orientation.fromValue(random.nextInt(4) * 90), TreasureType.SYM_06));
 
 		for (int i = 0; i < 9; i++) {
-			freeCards.add(new Card(CardShape.L, Orientation.fromValue(random
-					.nextInt(4) * 90), null));
+			freeCards.add(new Card(CardShape.L, Orientation.fromValue(random.nextInt(4) * 90), null));
 		}
 
 		// 13 mal I-shape
 		for (int i = 0; i < 13; i++) {
-			freeCards.add(new Card(CardShape.I, Orientation.fromValue(random
-					.nextInt(4) * 90), null));
+			freeCards.add(new Card(CardShape.I, Orientation.fromValue(random.nextInt(4) * 90), null));
 		}
 
 		// 6 mal T-shape
-		freeCards.add(new Card(CardShape.T, Orientation.fromValue(random
-				.nextInt(4) * 90), TreasureType.SYM_07));
-		freeCards.add(new Card(CardShape.T, Orientation.fromValue(random
-				.nextInt(4) * 90), TreasureType.SYM_08));
-		freeCards.add(new Card(CardShape.T, Orientation.fromValue(random
-				.nextInt(4) * 90), TreasureType.SYM_09));
-		freeCards.add(new Card(CardShape.T, Orientation.fromValue(random
-				.nextInt(4) * 90), TreasureType.SYM_10));
-		freeCards.add(new Card(CardShape.T, Orientation.fromValue(random
-				.nextInt(4) * 90), TreasureType.SYM_11));
-		freeCards.add(new Card(CardShape.T, Orientation.fromValue(random
-				.nextInt(4) * 90), TreasureType.SYM_12));
+		freeCards.add(new Card(CardShape.T, Orientation.fromValue(random.nextInt(4) * 90), TreasureType.SYM_07));
+		freeCards.add(new Card(CardShape.T, Orientation.fromValue(random.nextInt(4) * 90), TreasureType.SYM_08));
+		freeCards.add(new Card(CardShape.T, Orientation.fromValue(random.nextInt(4) * 90), TreasureType.SYM_09));
+		freeCards.add(new Card(CardShape.T, Orientation.fromValue(random.nextInt(4) * 90), TreasureType.SYM_10));
+		freeCards.add(new Card(CardShape.T, Orientation.fromValue(random.nextInt(4) * 90), TreasureType.SYM_11));
+		freeCards.add(new Card(CardShape.T, Orientation.fromValue(random.nextInt(4) * 90), TreasureType.SYM_12));
 
 		if (!Settings.TESTBOARD)
 			Collections.shuffle(freeCards);
@@ -273,8 +239,7 @@ public class Board extends BoardType {
 
 	// Fuehrt nur das Hereinschieben der Karte aus!!!
 	public void proceedShift(MoveMessageType move) {
-		Debug.print(
-				Messages.getString("Board.proceedShiftFkt"), DebugLevel.DEBUG); //$NON-NLS-1$
+		Debug.print(Messages.getString("Board.proceedShiftFkt"), DebugLevel.DEBUG); //$NON-NLS-1$
 		Position sm = new Position(move.getShiftPosition());
 		if (sm.getCol() % 6 == 0) { // Col=6 oder 0
 			if (sm.getRow() % 2 == 1) {
@@ -340,8 +305,7 @@ public class Board extends BoardType {
 	 * @return
 	 */
 	public boolean proceedTurn(MoveMessageType move, Integer currPlayer) {
-		Debug.print(
-				Messages.getString("Board.proceedTurnFkt"), DebugLevel.DEBUG); //$NON-NLS-1$
+		Debug.print(Messages.getString("Board.proceedTurnFkt"), DebugLevel.DEBUG); //$NON-NLS-1$
 		// XXX ACHTUNG wird nicht mehr auf Richtigkeit überprüft!!!
 		this.proceedShift(move);
 		Position target = new Position(move.getNewPinPos());
@@ -351,13 +315,10 @@ public class Board extends BoardType {
 
 	}
 
-	protected void movePlayer(PositionType oldPos, PositionType newPos,
-			Integer playerID) {
+	protected void movePlayer(PositionType oldPos, PositionType newPos, Integer playerID) {
 		Debug.print(Messages.getString("Board.movePlayerFkt"), DebugLevel.DEBUG); //$NON-NLS-1$
-		getCard(oldPos.getRow(), oldPos.getCol()).getPin().getPlayerID()
-				.remove(playerID);
-		getCard(newPos.getRow(), newPos.getCol()).getPin().getPlayerID()
-				.add(playerID);
+		getCard(oldPos.getRow(), oldPos.getCol()).getPin().getPlayerID().remove(playerID);
+		getCard(newPos.getRow(), newPos.getCol()).getPin().getPlayerID().add(playerID);
 	}
 
 	public Board fakeShift(MoveMessageType move) {
@@ -386,8 +347,7 @@ public class Board extends BoardType {
 	}
 
 	public boolean validateTransition(MoveMessageType move, Integer playerID) {
-		Debug.print(
-				Messages.getString("Board.validateTransitionFkt"), DebugLevel.DEBUG); //$NON-NLS-1$
+		Debug.print(Messages.getString("Board.validateTransitionFkt"), DebugLevel.DEBUG); //$NON-NLS-1$
 		PositionType movePosition = move.getShiftPosition();
 		CardType moveShiftCard = move.getShiftCard();
 		if (movePosition == null || moveShiftCard == null)
@@ -395,31 +355,24 @@ public class Board extends BoardType {
 		Position sm = new Position(movePosition);
 		// Ueberpruefen ob das Reinschieben der Karte gueltig ist
 		if (!sm.isLoosePosition() || sm.equals(forbidden)) {
-			System.err.println(Messages
-					.getString("Board.forbiddenPostitionShiftCard")); //$NON-NLS-1$
+			System.err.println(Messages.getString("Board.forbiddenPostitionShiftCard")); //$NON-NLS-1$
 			return false;
 		}
 		Card sc = new Card(moveShiftCard);
 		if (!sc.equals(shiftCard)) {
-			System.err.println(Messages
-					.getString("Board.shiftCardIllegallyChanged")); //$NON-NLS-1$
+			System.err.println(Messages.getString("Board.shiftCardIllegallyChanged")); //$NON-NLS-1$
 			return false;
 		}
 		// Ueberpruefen ob der Spielzug gueltig ist
 		Board fakeBoard = this.fakeShift(move);
 		Position playerPosition = new Position(fakeBoard.findPlayer(playerID));
-		Debug.print(
-				String.format(Messages
-						.getString("Board.playerWantsToMoveFromTo"), //$NON-NLS-1$
-						playerPosition.getRow(), playerPosition.getCol(), move
-								.getNewPinPos().getRow(), move.getNewPinPos()
-								.getCol()), DebugLevel.VERBOSE);
-		Debug.print(
-				Messages.getString("Board.boardAfterShifting"), DebugLevel.VERBOSE); //$NON-NLS-1$
+		Debug.print(String.format(Messages.getString("Board.playerWantsToMoveFromTo"), //$NON-NLS-1$
+				playerPosition.getRow(), playerPosition.getCol(), move.getNewPinPos().getRow(),
+				move.getNewPinPos().getCol()), DebugLevel.VERBOSE);
+		Debug.print(Messages.getString("Board.boardAfterShifting"), DebugLevel.VERBOSE); //$NON-NLS-1$
 		Debug.print(fakeBoard.toString(), DebugLevel.VERBOSE);
 		if (fakeBoard.pathPossible(playerPosition, move.getNewPinPos())) {
-			Debug.print(
-					Messages.getString("Board.illegalMove"), DebugLevel.VERBOSE); //$NON-NLS-1$
+			Debug.print(Messages.getString("Board.illegalMove"), DebugLevel.VERBOSE); //$NON-NLS-1$
 			return true;
 		}
 		Debug.print(Messages.getString("Board.positionNotReachable"), //$NON-NLS-1$
@@ -428,8 +381,7 @@ public class Board extends BoardType {
 	}
 
 	public boolean pathPossible(PositionType oldPos, PositionType newPos) {
-		Debug.print(
-				Messages.getString("Board.pathPossibleFkt"), DebugLevel.DEBUG); //$NON-NLS-1$
+		Debug.print(Messages.getString("Board.pathPossibleFkt"), DebugLevel.DEBUG); //$NON-NLS-1$
 		if (oldPos == null || newPos == null)
 			return false;
 		Position oldP = new Position(oldPos);
@@ -438,8 +390,7 @@ public class Board extends BoardType {
 	}
 
 	public List<PositionType> getAllReachablePositions(PositionType position) {
-		Debug.print(
-				Messages.getString("Board.getAllReachablePositionsFkt"), DebugLevel.DEBUG); //$NON-NLS-1$
+		Debug.print(Messages.getString("Board.getAllReachablePositionsFkt"), DebugLevel.DEBUG); //$NON-NLS-1$
 		List<PositionType> erreichbarePositionen = new ArrayList<PositionType>();
 		int[][] erreichbar = new int[7][7];
 		erreichbar[position.getRow()][position.getCol()] = 1;
@@ -454,8 +405,7 @@ public class Board extends BoardType {
 		return erreichbarePositionen;
 	}
 
-	private int[][] getAllReachablePositionsMatrix(PositionType position,
-			int[][] erreichbar) {
+	private int[][] getAllReachablePositionsMatrix(PositionType position, int[][] erreichbar) {
 		for (PositionType p1 : getDirectReachablePositions(position)) {
 			if (erreichbar[p1.getRow()][p1.getCol()] == 0) {
 				erreichbar[p1.getRow()][p1.getCol()] = 1;
@@ -471,34 +421,25 @@ public class Board extends BoardType {
 		Openings openings = k.getOpenings();
 		if (openings.isLeft()) {
 			if (position.getCol() - 1 >= 0
-					&& getCard(position.getRow(), position.getCol() - 1)
-							.getOpenings().isRight()) {
-				positionen.add(new Position(position.getRow(), position
-						.getCol() - 1));
+					&& getCard(position.getRow(), position.getCol() - 1).getOpenings().isRight()) {
+				positionen.add(new Position(position.getRow(), position.getCol() - 1));
 			}
 		}
 		if (openings.isTop()) {
 			if (position.getRow() - 1 >= 0
-					&& getCard(position.getRow() - 1, position.getCol())
-							.getOpenings().isBottom()) {
-				positionen.add(new Position(position.getRow() - 1, position
-						.getCol()));
+					&& getCard(position.getRow() - 1, position.getCol()).getOpenings().isBottom()) {
+				positionen.add(new Position(position.getRow() - 1, position.getCol()));
 			}
 		}
 		if (openings.isRight()) {
 			if (position.getCol() + 1 <= 6
-					&& getCard(position.getRow(), position.getCol() + 1)
-							.getOpenings().isLeft()) {
-				positionen.add(new Position(position.getRow(), position
-						.getCol() + 1));
+					&& getCard(position.getRow(), position.getCol() + 1).getOpenings().isLeft()) {
+				positionen.add(new Position(position.getRow(), position.getCol() + 1));
 			}
 		}
 		if (openings.isBottom()) {
-			if (position.getRow() + 1 <= 6
-					&& getCard(position.getRow() + 1, position.getCol())
-							.getOpenings().isTop()) {
-				positionen.add(new Position(position.getRow() + 1, position
-						.getCol()));
+			if (position.getRow() + 1 <= 6 && getCard(position.getRow() + 1, position.getCol()).getOpenings().isTop()) {
+				positionen.add(new Position(position.getRow() + 1, position.getCol()));
 			}
 		}
 		return positionen;

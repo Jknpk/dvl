@@ -1,12 +1,11 @@
 package server;
 
-import generated.ErrorType;
-import generated.TreasureType;
-
 import java.util.Collection;
 import java.util.EmptyStackException;
 import java.util.Stack;
 
+import generated.ErrorType;
+import generated.TreasureType;
 import networking.Connection;
 
 public class Player {
@@ -50,12 +49,12 @@ public class Player {
 	}
 
 	public int treasuresToGo() {
-		return treasures.size() + ( (currentTreasure!=null)?1:0 );
+		return treasures.size() + ((currentTreasure != null) ? 1 : 0);
 	}
 
 	public void setTreasure(Collection<? extends TreasureType> c) {
 		this.treasures.addAll(c);
-		this.currentTreasure=treasures.pop();
+		this.currentTreasure = treasures.pop();
 	}
 
 	public int getID() {

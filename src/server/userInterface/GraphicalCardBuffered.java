@@ -1,7 +1,5 @@
 package server.userInterface;
 
-import generated.TreasureType;
-
 import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.Graphics;
@@ -20,12 +18,13 @@ import java.util.List;
 import javax.imageio.ImageIO;
 import javax.swing.JPanel;
 
+import config.Settings;
+import generated.TreasureType;
 import server.Card;
 import server.Card.CardShape;
 import server.Card.Orientation;
 import tools.Debug;
 import tools.DebugLevel;
-import config.Settings;
 
 public class GraphicalCardBuffered extends JPanel implements ComponentListener {
 
@@ -75,10 +74,8 @@ public class GraphicalCardBuffered extends JPanel implements ComponentListener {
 		this.cardOrientation = co;
 		try {
 			URL url = GraphicalCardBuffered.class
-					.getResource(Settings.IMAGEPATH + cs.toString()
-							+ co.value() + Settings.IMAGEFILEEXTENSION);
-			Debug.print(
-					Messages.getString("GraphicalCardBuffered.Load") + url.toString(), DebugLevel.DEBUG); //$NON-NLS-1$
+					.getResource(Settings.IMAGEPATH + cs.toString() + co.value() + Settings.IMAGEFILEEXTENSION);
+			Debug.print(Messages.getString("GraphicalCardBuffered.Load") + url.toString(), DebugLevel.DEBUG); //$NON-NLS-1$
 			shape = ImageIO.read(url);
 
 		} catch (IOException e) {
@@ -120,8 +117,7 @@ public class GraphicalCardBuffered extends JPanel implements ComponentListener {
 			return;
 		}
 
-		BufferedImage buff = new BufferedImage(w, h,
-				BufferedImage.TYPE_INT_ARGB_PRE);
+		BufferedImage buff = new BufferedImage(w, h, BufferedImage.TYPE_INT_ARGB_PRE);
 
 		Graphics2D g2 = buff.createGraphics();
 		if (shape != null) {

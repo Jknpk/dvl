@@ -12,7 +12,7 @@ public class Debug {
 		liste.put(stream, level);
 	}
 
-	//TODO erlaeuterndes Javadoc
+	// TODO erlaeuterndes Javadoc
 	public static void print(String str, DebugLevel level) {
 		str += "\n"; //$NON-NLS-1$
 		for (OutputStream out : liste.keySet()) {

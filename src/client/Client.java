@@ -12,36 +12,35 @@ import javax.xml.bind.Marshaller;
 import javax.xml.bind.Unmarshaller;
 
 import generated.MazeCom;
-import generated.MazeComType;
 import generated.ObjectFactory;
 import networking.UTFInputStream;
 import networking.UTFOutputStream;
 
 public class Client {
-	
+
 	private static final String PORT = "5123";
 	private static final String HOST = "127.0.0.1";
 	private String ip;
 	private String port;
 	private Socket clientSocket;
-	
+
 	private UTFOutputStream outToServer;
 	private UTFInputStream inFromServer;
-	
+
 	private ObjectFactory of = new ObjectFactory();;
 	private JAXBContext jc;
-	
+
 	private Marshaller marshaller;
 	private Unmarshaller unmarshaller;
-	
+
 	private ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
 	private ByteArrayInputStream byteArrayInputStream;
-	
+
 	private Thread communicationThread;
-	
+
 	private int id;
-	
-	public Client(String ip, String port){
+
+	public Client(String ip, String port) {
 		this.ip = ip;
 		this.port = port;
 		try {
@@ -52,22 +51,21 @@ public class Client {
 			marshaller = jc.createMarshaller();
 			marshaller.setProperty(Marshaller.JAXB_FORMATTED_OUTPUT, Boolean.TRUE);
 			unmarshaller = jc.createUnmarshaller();
-	   	} catch (JAXBException | IOException e) {
+		} catch (JAXBException | IOException e) {
 			e.printStackTrace();
 		}
 	}
-	
-	public void connect(){
+
+	public void connect() {
 		// Login
 		Login login = new Login(this);
 		this.id = login.getId();
-		//Start the Game
+		// Start the Game
 		Game game = new Game(this);
 		game.start();
 	}
-	
-	
-	public void writeToServer(MazeCom mc) throws SocketException{
+
+	public void writeToServer(MazeCom mc) throws SocketException {
 		byteArrayOutputStream = new ByteArrayOutputStream();
 		try {
 			marshaller.marshal(mc, byteArrayOutputStream);
@@ -77,34 +75,32 @@ public class Client {
 		} catch (JAXBException | IOException e) {
 			e.printStackTrace();
 		}
-	} 
-	
+	}
+
 	public MazeCom receiveFromServer() {
 		MazeCom mc = null;
-		try{
+		try {
 			String string = inFromServer.readUTF8();
-			//Unmarshalling und Nachrichtenausgabe
+			// Unmarshalling und Nachrichtenausgabe
 			byteArrayInputStream = new ByteArrayInputStream(string.getBytes());
 			unmarshaller = jc.createUnmarshaller();
 			mc = (MazeCom) unmarshaller.unmarshal(byteArrayInputStream);
-		}catch(JAXBException | IOException e){
-			e.printStackTrace();	
+		} catch (JAXBException | IOException e) {
+			e.printStackTrace();
 		}
 		return mc;
 	}
 
-	
-	
 	public static void main(String[] args) {
-		
+
 		// Port: 5123
 
 		Client client = null;
-		try{
+		try {
 			client = new Client(args[0], args[1]);
-		} catch (ArrayIndexOutOfBoundsException e){
-			client = new Client(HOST, PORT);	//Defaultwerte
-		}	
+		} catch (ArrayIndexOutOfBoundsException e) {
+			client = new Client(HOST, PORT); // Defaultwerte
+		}
 		client.connect();
 	}
 

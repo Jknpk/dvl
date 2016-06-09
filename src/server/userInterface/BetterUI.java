@@ -1,9 +1,5 @@
 package server.userInterface;
 
-import generated.BoardType.Row;
-import generated.CardType;
-import generated.MoveMessageType;
-
 import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Graphics;
@@ -36,6 +32,10 @@ import javax.swing.JTextArea;
 import javax.swing.SwingUtilities;
 import javax.swing.Timer;
 
+import config.Settings;
+import generated.BoardType.Row;
+import generated.CardType;
+import generated.MoveMessageType;
 import server.Board;
 import server.Card;
 import server.Game;
@@ -43,7 +43,6 @@ import server.Player;
 import server.Position;
 import tools.Debug;
 import tools.DebugLevel;
-import config.Settings;
 
 @SuppressWarnings("serial")
 public class BetterUI extends JFrame implements UI {
@@ -89,8 +88,7 @@ public class BetterUI extends JFrame implements UI {
 				for (CardType ct : r.getCol()) {
 					Card card = new Card(ct);
 					c[y][x] = card;
-					images[y][x] = ImageResources.getImage(card.getShape()
-							.toString() + card.getOrientation().value());
+					images[y][x] = ImageResources.getImage(card.getShape().toString() + card.getOrientation().value());
 					if (c[y][x].getTreasure() != null) {
 						ImageResources.getImage(c[y][x].getTreasure().value());
 					}
@@ -116,28 +114,21 @@ public class BetterUI extends JFrame implements UI {
 					int topLeftY = pixelsPerField * y;
 					int topLeftX = pixelsPerField * x;
 					if (animationProperties != null) {
-						if (animationProperties.vertikal
-								&& x == animationProperties.shiftPosition
-										.getCol()) {
+						if (animationProperties.vertikal && x == animationProperties.shiftPosition.getCol()) {
 							topLeftY += animationProperties.direction
 									* (pixelsPerField * animationState / animationFrames);
-						} else if (!animationProperties.vertikal
-								&& y == animationProperties.shiftPosition
-										.getRow()) {
+						} else if (!animationProperties.vertikal && y == animationProperties.shiftPosition.getRow()) {
 							topLeftX += animationProperties.direction
 									* (pixelsPerField * animationState / animationFrames);
 						}
 					}
 
-					g.drawImage(images[y][x], topLeftX, topLeftY,
-							pixelsPerField, pixelsPerField, null);
+					g.drawImage(images[y][x], topLeftX, topLeftY, pixelsPerField, pixelsPerField, null);
 					if (c[y][x] != null) {
 
 						if (c[y][x].getTreasure() != null) {
-							g.drawImage(ImageResources.getImage(c[y][x]
-									.getTreasure().value()), topLeftX
-									+ pixelsPerField / 4, topLeftY
-									+ pixelsPerField / 4, pixelsPerField / 2,
+							g.drawImage(ImageResources.getImage(c[y][x].getTreasure().value()),
+									topLeftX + pixelsPerField / 4, topLeftY + pixelsPerField / 4, pixelsPerField / 2,
 									pixelsPerField / 2, null);
 						}
 						// Zeichnen der SpielerPins
@@ -147,73 +138,49 @@ public class BetterUI extends JFrame implements UI {
 							synchronized (pins) {
 								for (Integer playerID : pins) {
 									g.setColor(colorForPlayer(playerID));
-									g.fillOval(topLeftX + pixelsPerField / 4
-											+ pixelsPerField / 4
-											* ((playerID - 1) / 2), topLeftY
-											+ pixelsPerField / 4
-											+ pixelsPerField / 4
-											* ((playerID - 1) % 2),
-											pixelsPerField / 4,
-											pixelsPerField / 4);
+									g.fillOval(
+											topLeftX + pixelsPerField / 4 + pixelsPerField / 4 * ((playerID - 1) / 2),
+											topLeftY + pixelsPerField / 4 + pixelsPerField / 4 * ((playerID - 1) % 2),
+											pixelsPerField / 4, pixelsPerField / 4);
 
 									g.setColor(Color.WHITE);
-									g.drawOval(topLeftX + pixelsPerField / 4
-											+ pixelsPerField / 4
-											* ((playerID - 1) / 2), topLeftY
-											+ pixelsPerField / 4
-											+ pixelsPerField / 4
-											* ((playerID - 1) % 2),
-											pixelsPerField / 4,
-											pixelsPerField / 4);
-									centerStringInRect((Graphics2D) g,
-											playerID.toString(), topLeftX
-													+ pixelsPerField / 4
-													+ pixelsPerField / 4
-													* ((playerID - 1) / 2),
-											topLeftY + pixelsPerField / 4
-													+ pixelsPerField / 4
-													* ((playerID - 1) % 2),
-											pixelsPerField / 4,
-											pixelsPerField / 4);
+									g.drawOval(
+											topLeftX + pixelsPerField / 4 + pixelsPerField / 4 * ((playerID - 1) / 2),
+											topLeftY + pixelsPerField / 4 + pixelsPerField / 4 * ((playerID - 1) % 2),
+											pixelsPerField / 4, pixelsPerField / 4);
+									centerStringInRect((Graphics2D) g, playerID.toString(),
+											topLeftX + pixelsPerField / 4 + pixelsPerField / 4 * ((playerID - 1) / 2),
+											topLeftY + pixelsPerField / 4 + pixelsPerField / 4 * ((playerID - 1) % 2),
+											pixelsPerField / 4, pixelsPerField / 4);
 								}
 							}
 						} catch (ConcurrentModificationException e) {
-							///TODO: schoenstes snippet ever - "Jago" sagt Harald
+							/// TODO: schoenstes snippet ever - "Jago" sagt
+							/// Harald
 						}
 
 					} else {
-						System.out
-								.println(String.format(Messages
-										.getString("BetterUI.cardIsNull"), x, y)); //$NON-NLS-1$
+						System.out.println(String.format(Messages.getString("BetterUI.cardIsNull"), x, y)); //$NON-NLS-1$
 					}
 				}
 			}
 			// Zeichnen der eingeschobenen karte in der animation
 			if (animationProperties != null) {
-				int topLeftY = pixelsPerField
-						* (animationProperties.shiftPosition.getRow() - (animationProperties.vertikal ? animationProperties.direction
-								: 0));
-				int topLeftX = pixelsPerField
-						* (animationProperties.shiftPosition.getCol() - (!animationProperties.vertikal ? animationProperties.direction
-								: 0));
+				int topLeftY = pixelsPerField * (animationProperties.shiftPosition.getRow()
+						- (animationProperties.vertikal ? animationProperties.direction : 0));
+				int topLeftX = pixelsPerField * (animationProperties.shiftPosition.getCol()
+						- (!animationProperties.vertikal ? animationProperties.direction : 0));
 				if (animationProperties.vertikal) {
-					topLeftY += animationProperties.direction
-							* (pixelsPerField * animationState / animationFrames);
+					topLeftY += animationProperties.direction * (pixelsPerField * animationState / animationFrames);
 				} else {
-					topLeftX += animationProperties.direction
-							* (pixelsPerField * animationState / animationFrames);
+					topLeftX += animationProperties.direction * (pixelsPerField * animationState / animationFrames);
 				}
 				Card card = new Card(board.getShiftCard());
-				g.drawImage(
-						ImageResources.getImage(card.getShape().toString()
-								+ card.getOrientation().value()), topLeftX,
-						topLeftY, pixelsPerField, pixelsPerField, null);
+				g.drawImage(ImageResources.getImage(card.getShape().toString() + card.getOrientation().value()),
+						topLeftX, topLeftY, pixelsPerField, pixelsPerField, null);
 				if (card.getTreasure() != null) {
-					g.drawImage(
-							ImageResources.getImage(card.getTreasure().value()),
-							topLeftX + pixelsPerField / 4, topLeftY
-									+ pixelsPerField / 4, pixelsPerField / 2,
-							pixelsPerField / 2, null);
+					g.drawImage(ImageResources.getImage(card.getTreasure().value()), topLeftX + pixelsPerField / 4,
+							topLeftY + pixelsPerField / 4, pixelsPerField / 2, pixelsPerField / 2, null);
 				}
 				g.setColor(Color.YELLOW);
 				g.drawRect(topLeftX, topLeftY, pixelsPerField, pixelsPerField);
@@ -224,10 +191,8 @@ public class BetterUI extends JFrame implements UI {
 			return pixelsPerField;
 		}
 
-		private void centerStringInRect(Graphics2D g2d, String s, int x, int y,
-				int height, int width) {
-			Rectangle size = g2d.getFontMetrics().getStringBounds(s, g2d)
-					.getBounds();
+		private void centerStringInRect(Graphics2D g2d, String s, int x, int y, int height, int width) {
+			Rectangle size = g2d.getFontMetrics().getStringBounds(s, g2d).getBounds();
 			float startX = (float) (width / 2 - size.getWidth() / 2);
 			float startY = (float) (height / 2 - size.getHeight() / 2);
 			g2d.drawString(s, startX + x - size.x, startY + y - size.y);
@@ -248,11 +213,9 @@ public class BetterUI extends JFrame implements UI {
 				currentPlayer = current;
 				currentPlayerLabels.get(currentPlayer).setText(">"); //$NON-NLS-1$
 				for (Player p : stats) {
-					statLabels.get(p.getID()).setText(
-							String.valueOf(p.treasuresToGo()));
-					treasureImages.get(p.getID()).setIcon(
-							new ImageIcon(ImageResources.getImage(p
-									.getCurrentTreasure().value())));
+					statLabels.get(p.getID()).setText(String.valueOf(p.treasuresToGo()));
+					treasureImages.get(p.getID())
+							.setIcon(new ImageIcon(ImageResources.getImage(p.getCurrentTreasure().value())));
 				}
 
 			} else {
@@ -267,32 +230,24 @@ public class BetterUI extends JFrame implements UI {
 
 				// GridBagConstraints(gridx, gridy, gridwidth, gridheight,
 				// weightx, weighty, anchor, fill, insets, ipadx, ipady);
-				this.add(
-						shiftCard,
-						new GridBagConstraints(0, 0, 5, 1, 0.5, 0.5,
-								GridBagConstraints.CENTER,
-								GridBagConstraints.NONE,
-								new Insets(0, 0, 0, 0), uiboard
-										.getPixelsPerField(), uiboard
-										.getPixelsPerField()));
+				this.add(shiftCard,
+						new GridBagConstraints(0, 0, 5, 1, 0.5, 0.5, GridBagConstraints.CENTER, GridBagConstraints.NONE,
+								new Insets(0, 0, 0, 0), uiboard.getPixelsPerField(), uiboard.getPixelsPerField()));
 				// this.getComponentAt(0, 0).get
 				for (Player p : stats) {
 					gc.gridy = p.getID();
 					JLabel currentPlayerLabel = new JLabel();
 					currentPlayerLabels.put(p.getID(), currentPlayerLabel);
 
-					JLabel playerIDLabel = new JLabel(String.valueOf(p.getID())
-							+ ".   "); //$NON-NLS-1$
+					JLabel playerIDLabel = new JLabel(String.valueOf(p.getID()) + ".   "); //$NON-NLS-1$
 					JLabel playerNameLabel = new JLabel(p.getName());
 					playerNameLabel.setForeground(colorForPlayer(p.getID()));
 
-					JLabel statLabel = new JLabel(String.valueOf(p
-							.treasuresToGo()));
+					JLabel statLabel = new JLabel(String.valueOf(p.treasuresToGo()));
 					statLabels.put(p.getID(), statLabel);
 
-					JLabel treasureImage = new JLabel(new ImageIcon(
-							ImageResources.getImage(p.getCurrentTreasure()
-									.value())));
+					JLabel treasureImage = new JLabel(
+							new ImageIcon(ImageResources.getImage(p.getCurrentTreasure().value())));
 					treasureImages.put(p.getID(), treasureImage);
 
 					gc.ipadx = 5;
@@ -310,10 +265,9 @@ public class BetterUI extends JFrame implements UI {
 				JPanel panel = new JPanel(new BorderLayout());
 				panel.add(scrollPane);
 
-				this.add(panel, new GridBagConstraints(0, 5, 5, 1, 0.5, 0.5,
-						GridBagConstraints.CENTER, GridBagConstraints.BOTH,
-						new Insets(0, 0, 0, 0), uiboard.getPixelsPerField(),
-						uiboard.getPixelsPerField()));
+				this.add(panel,
+						new GridBagConstraints(0, 5, 5, 1, 0.5, 0.5, GridBagConstraints.CENTER, GridBagConstraints.BOTH,
+								new Insets(0, 0, 0, 0), uiboard.getPixelsPerField(), uiboard.getPixelsPerField()));
 			}
 		}
 	}
@@ -355,13 +309,11 @@ public class BetterUI extends JFrame implements UI {
 			{
 				MPlayerSettings = new JMenu();
 				jMenuBar1.add(MPlayerSettings);
-				MPlayerSettings.setText(Messages
-						.getString("BetterUI.playerCount")); //$NON-NLS-1$
+				MPlayerSettings.setText(Messages.getString("BetterUI.playerCount")); //$NON-NLS-1$
 				{
 					MI1Spieler = new JRadioButtonMenuItem();
 					MPlayerSettings.add(MI1Spieler);
-					MI1Spieler
-							.setText(Messages.getString("BetterUI.OnePlayer")); //$NON-NLS-1$
+					MI1Spieler.setText(Messages.getString("BetterUI.OnePlayer")); //$NON-NLS-1$
 					MI1Spieler.setSelected(true);
 					MI1Spieler.addActionListener(new ActionListener() {
 						public void actionPerformed(ActionEvent evt) {
@@ -372,8 +324,7 @@ public class BetterUI extends JFrame implements UI {
 				{
 					MI2Spieler = new JRadioButtonMenuItem();
 					MPlayerSettings.add(MI2Spieler);
-					MI2Spieler
-							.setText(Messages.getString("BetterUI.TwoPlayer")); //$NON-NLS-1$
+					MI2Spieler.setText(Messages.getString("BetterUI.TwoPlayer")); //$NON-NLS-1$
 					MI2Spieler.addActionListener(new ActionListener() {
 						public void actionPerformed(ActionEvent evt) {
 							Settings.DEFAULT_PLAYERS = 2;
@@ -383,8 +334,7 @@ public class BetterUI extends JFrame implements UI {
 				{
 					MI3Spieler = new JRadioButtonMenuItem();
 					MPlayerSettings.add(MI3Spieler);
-					MI3Spieler.setText(Messages
-							.getString("BetterUI.ThreePlayer")); //$NON-NLS-1$
+					MI3Spieler.setText(Messages.getString("BetterUI.ThreePlayer")); //$NON-NLS-1$
 					MI3Spieler.addActionListener(new ActionListener() {
 						public void actionPerformed(ActionEvent evt) {
 							Settings.DEFAULT_PLAYERS = 3;
@@ -394,8 +344,7 @@ public class BetterUI extends JFrame implements UI {
 				{
 					MI4Spieler = new JRadioButtonMenuItem();
 					MPlayerSettings.add(MI4Spieler);
-					MI4Spieler.setText(Messages
-							.getString("BetterUI.FourPlayer")); //$NON-NLS-1$
+					MI4Spieler.setText(Messages.getString("BetterUI.FourPlayer")); //$NON-NLS-1$
 					MI4Spieler.addActionListener(new ActionListener() {
 						public void actionPerformed(ActionEvent evt) {
 							Settings.DEFAULT_PLAYERS = 4;
@@ -412,8 +361,7 @@ public class BetterUI extends JFrame implements UI {
 		}
 		this.setLayout(new BorderLayout());
 		this.setDefaultCloseOperation(EXIT_ON_CLOSE);
-		splitPane = new JSplitPane(JSplitPane.HORIZONTAL_SPLIT, uiboard,
-				statPanel);
+		splitPane = new JSplitPane(JSplitPane.HORIZONTAL_SPLIT, uiboard, statPanel);
 		this.add(splitPane, BorderLayout.CENTER);
 		this.pack();
 		this.setSize(800, 700);
@@ -472,13 +420,11 @@ public class BetterUI extends JFrame implements UI {
 			if (shiftPosition.getCol() == 6 || shiftPosition.getCol() == 0) {
 				vertikal = false;
 				direction = shiftPosition.getCol() == 0 ? 1 : -1;
-			} else if (shiftPosition.getRow() == 6
-					|| shiftPosition.getRow() == 0) {
+			} else if (shiftPosition.getRow() == 6 || shiftPosition.getRow() == 0) {
 				vertikal = true;
 				direction = shiftPosition.getRow() == 0 ? 1 : -1;
 			} else {
-				throw new IllegalArgumentException(
-						Messages.getString("BetterUI.cantShift")); //$NON-NLS-1$
+				throw new IllegalArgumentException(Messages.getString("BetterUI.cantShift")); //$NON-NLS-1$
 			}
 		}
 	}
@@ -502,8 +448,7 @@ public class BetterUI extends JFrame implements UI {
 	}
 
 	private static class Pathfinding {
-		public static int[][] findShortestPath(Board b, Position startPos,
-				Position endPos) {
+		public static int[][] findShortestPath(Board b, Position startPos, Position endPos) {
 
 			// Dijkstra
 			boolean[][] visited = new boolean[7][7];
@@ -520,40 +465,30 @@ public class BetterUI extends JFrame implements UI {
 			weglen[currentY][currentX] = 0;
 			while (true) {
 				visited[currentY][currentX] = true;
-				if (currentX > 0
-						&& b.getCard(currentY, currentX).getOpenings().isLeft()
-						&& b.getCard(currentY, currentX - 1).getOpenings()
-								.isRight()) {
+				if (currentX > 0 && b.getCard(currentY, currentX).getOpenings().isLeft()
+						&& b.getCard(currentY, currentX - 1).getOpenings().isRight()) {
 					if (weglen[currentY][currentX - 1] > weglen[currentY][currentX] + 1) {
 						weglen[currentY][currentX - 1] = weglen[currentY][currentX] + 1;
 						pfad[currentY][currentX - 1] = currentY * 7 + currentX;
 					}
 				}
-				if (currentY > 0
-						&& b.getCard(currentY, currentX).getOpenings().isTop()
-						&& b.getCard(currentY - 1, currentX).getOpenings()
-								.isBottom()) {
+				if (currentY > 0 && b.getCard(currentY, currentX).getOpenings().isTop()
+						&& b.getCard(currentY - 1, currentX).getOpenings().isBottom()) {
 					if (weglen[currentY - 1][currentX] > weglen[currentY][currentX] + 1) {
 						weglen[currentY - 1][currentX] = weglen[currentY][currentX] + 1;
 						pfad[currentY - 1][currentX] = currentY * 7 + currentX;
 					}
 				}
 
-				if (currentX < 6
-						&& b.getCard(currentY, currentX).getOpenings()
-								.isRight()
-						&& b.getCard(currentY, currentX + 1).getOpenings()
-								.isLeft()) {
+				if (currentX < 6 && b.getCard(currentY, currentX).getOpenings().isRight()
+						&& b.getCard(currentY, currentX + 1).getOpenings().isLeft()) {
 					if (weglen[currentY][currentX + 1] > weglen[currentY][currentX] + 1) {
 						weglen[currentY][currentX + 1] = weglen[currentY][currentX] + 1;
 						pfad[currentY][currentX + 1] = currentY * 7 + currentX;
 					}
 				}
-				if (currentY < 6
-						&& b.getCard(currentY, currentX).getOpenings()
-								.isBottom()
-						&& b.getCard(currentY + 1, currentX).getOpenings()
-								.isTop()) {
+				if (currentY < 6 && b.getCard(currentY, currentX).getOpenings().isBottom()
+						&& b.getCard(currentY + 1, currentX).getOpenings().isTop()) {
 					if (weglen[currentY + 1][currentX] > weglen[currentY][currentX] + 1) {
 						weglen[currentY + 1][currentX] = weglen[currentY][currentX] + 1;
 						pfad[currentY + 1][currentX] = currentY * 7 + currentX;
@@ -564,8 +499,7 @@ public class BetterUI extends JFrame implements UI {
 					int currentMinWegLen = Integer.MAX_VALUE;
 					for (int y = 6; y >= 0; --y) {
 						for (int x = 6; x >= 0; --x) {
-							if (!visited[y][x]
-									&& weglen[y][x] < currentMinWegLen) {
+							if (!visited[y][x] && weglen[y][x] < currentMinWegLen) {
 								currentMinWegLen = weglen[y][x];
 								currentX = x;
 								currentY = y;
@@ -597,13 +531,10 @@ public class BetterUI extends JFrame implements UI {
 		int[][] points;
 		int i = 0;
 
-		public MoveAnimationTimerOperation(Board b, Position startPos,
-				Position endPos) {
+		public MoveAnimationTimerOperation(Board b, Position startPos, Position endPos) {
 			points = Pathfinding.findShortestPath(b, startPos, endPos);
-			uiboard.c[endPos.getRow()][endPos.getCol()].getPin().getPlayerID()
-					.remove(new Integer(currentPlayer));
-			uiboard.c[startPos.getRow()][startPos.getCol()].getPin()
-					.getPlayerID().add(new Integer(currentPlayer));
+			uiboard.c[endPos.getRow()][endPos.getCol()].getPin().getPlayerID().remove(new Integer(currentPlayer));
+			uiboard.c[startPos.getRow()][startPos.getCol()].getPin().getPlayerID().add(new Integer(currentPlayer));
 		}
 
 		@Override
@@ -616,11 +547,9 @@ public class BetterUI extends JFrame implements UI {
 				}
 				return;
 			}
-			uiboard.c[points[i][1]][points[i][0]].getPin().getPlayerID()
-					.remove(new Integer(currentPlayer));
+			uiboard.c[points[i][1]][points[i][0]].getPin().getPlayerID().remove(new Integer(currentPlayer));
 			i++;
-			uiboard.c[points[i][1]][points[i][0]].getPin().getPlayerID()
-					.add(new Integer(currentPlayer));
+			uiboard.c[points[i][1]][points[i][0]].getPin().getPlayerID().add(new Integer(currentPlayer));
 			// Wird zum animieren der Spielfigur benoetigt
 			if (i != 0) { // verbessert den Uebergang vom Schieben zum Ziehen
 				uiboard.repaint();
@@ -629,18 +558,15 @@ public class BetterUI extends JFrame implements UI {
 	}
 
 	@Override
-	public void displayMove(MoveMessageType mm, Board b, long moveDelay,
-			long shiftDelay, boolean treasureReached) {
+	public void displayMove(MoveMessageType mm, Board b, long moveDelay, long shiftDelay, boolean treasureReached) {
 		// Die Dauer von shiftDelay bezieht sich auf den kompletten Shift und
 		// nicht auf einen einzelnen Frame
 		shiftDelay /= animationFrames;
 		// shiftCard.setCard(new Card(mm.getShiftCard()));
 		if (animateShift) {
 			uiboard.board.setShiftCard(mm.getShiftCard());
-			animationTimer = new Timer((int) shiftDelay,
-					new ShiftAnimationTimerOperation());
-			animationProperties = new AnimationProperties(new Position(
-					mm.getShiftPosition()));
+			animationTimer = new Timer((int) shiftDelay, new ShiftAnimationTimerOperation());
+			animationProperties = new AnimationProperties(new Position(mm.getShiftPosition()));
 			synchronized (animationFinished) {
 				animationTimer.start();
 				try {
@@ -651,30 +577,25 @@ public class BetterUI extends JFrame implements UI {
 			}
 		}
 		uiboard.board.proceedShift(mm);
-		Position oldPlayerPos = new Position(
-				uiboard.board.findPlayer(currentPlayer));
+		Position oldPlayerPos = new Position(uiboard.board.findPlayer(currentPlayer));
 		uiboard.setBoard(b);
 		// repaint benoetigt alte Karten bleiben sonst,
 		// bis zur nächsten Schiebe-Animation sichtbar
 		animationTimer = new Timer((int) moveDelay,
-				new MoveAnimationTimerOperation(uiboard.board, oldPlayerPos,
-						new Position(mm.getNewPinPos())));
+				new MoveAnimationTimerOperation(uiboard.board, oldPlayerPos, new Position(mm.getNewPinPos())));
 		uiboard.repaint();
 		// muss nach repaint() stehen, sonst flickering!
 		shiftCard.setCard(new Card(b.getShiftCard()));
 		if (animateMove) {
 			// Falls unser Spieler sich selbst verschoben hat.
-			AnimationProperties props = new AnimationProperties(new Position(
-					mm.getShiftPosition()));
+			AnimationProperties props = new AnimationProperties(new Position(mm.getShiftPosition()));
 			if (props.vertikal) {
 				if (oldPlayerPos.getCol() == props.shiftPosition.getCol()) {
-					oldPlayerPos
-							.setRow((7 + oldPlayerPos.getRow() + props.direction) % 7);
+					oldPlayerPos.setRow((7 + oldPlayerPos.getRow() + props.direction) % 7);
 				}
 			} else {
 				if (oldPlayerPos.getRow() == props.shiftPosition.getRow()) {
-					oldPlayerPos
-							.setCol((7 + oldPlayerPos.getCol() + props.direction) % 7);
+					oldPlayerPos.setCol((7 + oldPlayerPos.getCol() + props.direction) % 7);
 				}
 			}
 			synchronized (animationFinished) {
@@ -717,8 +638,7 @@ public class BetterUI extends JFrame implements UI {
 		case 4:
 			return Color.BLUE;
 		default:
-			throw new IllegalArgumentException(
-					Messages.getString("BetterUI.UInotPreparedForPlayerID")); //$NON-NLS-1$
+			throw new IllegalArgumentException(Messages.getString("BetterUI.UInotPreparedForPlayerID")); //$NON-NLS-1$
 		}
 	}
 
@@ -730,9 +650,9 @@ public class BetterUI extends JFrame implements UI {
 	@Override
 	public void gameEnded(Player winner) {
 		if (winner != null) {
-			JOptionPane.showMessageDialog(this, String.format(Messages
-					.getString("BetterUI.playerIDwon"), winner.getName() //$NON-NLS-1$
-					, winner.getID()));
+			JOptionPane.showMessageDialog(this,
+					String.format(Messages.getString("BetterUI.playerIDwon"), winner.getName() //$NON-NLS-1$
+							, winner.getID()));
 		}
 		MIStart.setEnabled(true);
 		MIStop.setEnabled(false);

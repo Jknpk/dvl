@@ -3,9 +3,9 @@ package Timeouts;
 import java.util.HashMap;
 import java.util.Timer;
 
+import config.Settings;
 import networking.Connection;
 import server.Game;
-import config.Settings;
 
 public class TimeOutManager extends Timer {
 

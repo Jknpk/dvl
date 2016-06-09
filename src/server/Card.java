@@ -3,10 +3,10 @@ package server;
 import java.util.ArrayList;
 import java.util.List;
 
-import tools.Debug;
-import tools.DebugLevel;
 import generated.CardType;
 import generated.TreasureType;
+import tools.Debug;
+import tools.DebugLevel;
 
 public class Card extends CardType {
 	public enum CardShape {
@@ -53,7 +53,7 @@ public class Card extends CardType {
 		}
 	}
 
-	//TODO
+	// TODO
 	public List<Card> getPossibleRotations() {
 		List<Card> cards = new ArrayList<Card>();
 		// Reihenfolge und fehlende breaks wichtig
@@ -178,20 +178,17 @@ public class Card extends CardType {
 			return false;
 		Card other = new Card((CardType) obj);
 		if (this.treasure != other.getTreasure()) {
-			Debug.print(
-					Messages.getString("Card.treasureUnequal"), DebugLevel.DEBUG); //$NON-NLS-1$
+			Debug.print(Messages.getString("Card.treasureUnequal"), DebugLevel.DEBUG); //$NON-NLS-1$
 			return false;
 		}
 		for (Integer ID : this.getPin().getPlayerID()) {
 			if (!other.getPin().getPlayerID().contains(ID)) {
-				Debug.print(
-						Messages.getString("Card.playerUnequal"), DebugLevel.DEBUG); //$NON-NLS-1$
+				Debug.print(Messages.getString("Card.playerUnequal"), DebugLevel.DEBUG); //$NON-NLS-1$
 				return false;
 			}
 		}
 		if (other.getShape() != this.getShape()) {
-			Debug.print(
-					Messages.getString("Card.shapeUnequal"), DebugLevel.DEBUG); //$NON-NLS-1$
+			Debug.print(Messages.getString("Card.shapeUnequal"), DebugLevel.DEBUG); //$NON-NLS-1$
 			return false;
 		}
 		return true;

@@ -1,9 +1,8 @@
 package server.userInterface;
 
-import generated.MoveMessageType;
-
 import java.util.List;
 
+import generated.MoveMessageType;
 import server.Board;
 import server.Game;
 import server.Player;
@@ -14,11 +13,13 @@ public interface UI {
 	// Delay nicht mehr casten muss. Auf meinem System, wuerde der maximale
 	// Integer eine Wartezeit von abgerundet 24 Tagen zulassen. Ist meiner
 	// Meinung ausreichend ;) ~jago
-	public void displayMove(MoveMessageType mm, Board b, long moveDelay,
-			long shiftDelay, boolean treasureReached);
+	public void displayMove(MoveMessageType mm, Board b, long moveDelay, long shiftDelay, boolean treasureReached);
 
 	public void updatePlayerStatistics(List<Player> stats, Integer current);
+
 	public void init(Board b);
+
 	public void setGame(Game g);
+
 	public void gameEnded(Player winner);
 }

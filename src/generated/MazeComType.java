@@ -5,18 +5,20 @@
 // Generiert: 2015.05.27 um 09:04:47 AM CEST 
 //
 
-
 package generated;
 
 import javax.xml.bind.annotation.XmlEnum;
 import javax.xml.bind.annotation.XmlType;
 
-
 /**
- * <p>Java-Klasse für MazeComType.
- * 
- * <p>Das folgende Schemafragment gibt den erwarteten Content an, der in dieser Klasse enthalten ist.
  * <p>
+ * Java-Klasse für MazeComType.
+ * 
+ * <p>
+ * Das folgende Schemafragment gibt den erwarteten Content an, der in dieser
+ * Klasse enthalten ist.
+ * <p>
+ * 
  * <pre>
  * &lt;simpleType name="MazeComType">
  *   &lt;restriction base="{http://www.w3.org/2001/XMLSchema}string">
@@ -36,20 +38,14 @@ import javax.xml.bind.annotation.XmlType;
 @XmlEnum
 public enum MazeComType {
 
-    LOGIN,
-    LOGINREPLY,
-    AWAITMOVE,
-    MOVE,
-    ACCEPT,
-    WIN,
-    DISCONNECT;
+	LOGIN, LOGINREPLY, AWAITMOVE, MOVE, ACCEPT, WIN, DISCONNECT;
 
-    public String value() {
-        return name();
-    }
+	public String value() {
+		return name();
+	}
 
-    public static MazeComType fromValue(String v) {
-        return valueOf(v);
-    }
+	public static MazeComType fromValue(String v) {
+		return valueOf(v);
+	}
 
 }

@@ -1,10 +1,10 @@
 package networking;
 
+import config.Settings;
 import generated.ErrorType;
 import generated.MazeCom;
 import generated.MazeComType;
 import server.Player;
-import config.Settings;
 
 public class LoginThread extends Thread {
 
@@ -24,8 +24,7 @@ public class LoginThread extends Thread {
 		// \p{Punct} Punctuation: One of !"#$%&'()*+,-./:;<=>?@[\]^_`{|}~
 		// ausserdem äöüßÄÖÜ und Leerzeichen
 		String nameBuffer = name.replaceAll("[^\\w äüöÜÖÄß\\p{Punct}]", ""); //$NON-NLS-1$//$NON-NLS-2$
-		return nameBuffer.substring(0,
-				Math.min(Settings.MAX_NAME_LENGTH, nameBuffer.length()));
+		return nameBuffer.substring(0, Math.min(Settings.MAX_NAME_LENGTH, nameBuffer.length()));
 	}
 
 	public void run() {
@@ -35,15 +34,14 @@ public class LoginThread extends Thread {
 			// Test ob es sich um eine LoginNachricht handelt
 			if (loginMes != null && loginMes.getMcType() == MazeComType.LOGIN) {
 				// sende Reply
-				this.connection.sendMessage(this.mazeComMessageFactory
-						.createLoginReplyMessage(this.player.getID()), false);
-				this.player.init(cleanUpName(loginMes.getLoginMessage()
-						.getName()));
+				this.connection.sendMessage(this.mazeComMessageFactory.createLoginReplyMessage(this.player.getID()),
+						false);
+				this.player.init(cleanUpName(loginMes.getLoginMessage().getName()));
 				return;// verlassen des Threads
 			}
 			// Sende Fehler
-			this.connection.sendMessage(this.mazeComMessageFactory
-					.createAcceptMessage(-1, ErrorType.AWAIT_LOGIN), true);
+			this.connection.sendMessage(this.mazeComMessageFactory.createAcceptMessage(-1, ErrorType.AWAIT_LOGIN),
+					true);
 			failCounter++;
 			// nach einem Fehler auf den nächsten Versuch warten
 			loginMes = this.connection.receiveMessage();

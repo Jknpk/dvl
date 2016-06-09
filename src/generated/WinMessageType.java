@@ -5,7 +5,6 @@
 // Generiert: 2015.05.27 um 09:04:47 AM CEST 
 //
 
-
 package generated;
 
 import javax.xml.bind.annotation.XmlAccessType;
@@ -15,11 +14,13 @@ import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlType;
 import javax.xml.bind.annotation.XmlValue;
 
-
 /**
- * <p>Java-Klasse für WinMessageType complex type.
+ * <p>
+ * Java-Klasse für WinMessageType complex type.
  * 
- * <p>Das folgende Schemafragment gibt den erwarteten Content an, der in dieser Klasse enthalten ist.
+ * <p>
+ * Das folgende Schemafragment gibt den erwarteten Content an, der in dieser
+ * Klasse enthalten ist.
  * 
  * <pre>
  * &lt;complexType name="WinMessageType">
@@ -45,134 +46,122 @@ import javax.xml.bind.annotation.XmlValue;
  * 
  */
 @XmlAccessorType(XmlAccessType.FIELD)
-@XmlType(name = "WinMessageType", propOrder = {
-    "board",
-    "winner"
-})
+@XmlType(name = "WinMessageType", propOrder = { "board", "winner" })
 public class WinMessageType {
 
-    @XmlElement(required = true)
-    protected BoardType board;
-    @XmlElement(required = true)
-    protected WinMessageType.Winner winner;
+	@XmlElement(required = true)
+	protected BoardType board;
+	@XmlElement(required = true)
+	protected WinMessageType.Winner winner;
 
-    /**
-     * Ruft den Wert der board-Eigenschaft ab.
-     * 
-     * @return
-     *     possible object is
-     *     {@link BoardType }
-     *     
-     */
-    public BoardType getBoard() {
-        return board;
-    }
+	/**
+	 * Ruft den Wert der board-Eigenschaft ab.
+	 * 
+	 * @return possible object is {@link BoardType }
+	 * 
+	 */
+	public BoardType getBoard() {
+		return board;
+	}
 
-    /**
-     * Legt den Wert der board-Eigenschaft fest.
-     * 
-     * @param value
-     *     allowed object is
-     *     {@link BoardType }
-     *     
-     */
-    public void setBoard(BoardType value) {
-        this.board = value;
-    }
+	/**
+	 * Legt den Wert der board-Eigenschaft fest.
+	 * 
+	 * @param value
+	 *            allowed object is {@link BoardType }
+	 * 
+	 */
+	public void setBoard(BoardType value) {
+		this.board = value;
+	}
 
-    /**
-     * Ruft den Wert der winner-Eigenschaft ab.
-     * 
-     * @return
-     *     possible object is
-     *     {@link WinMessageType.Winner }
-     *     
-     */
-    public WinMessageType.Winner getWinner() {
-        return winner;
-    }
+	/**
+	 * Ruft den Wert der winner-Eigenschaft ab.
+	 * 
+	 * @return possible object is {@link WinMessageType.Winner }
+	 * 
+	 */
+	public WinMessageType.Winner getWinner() {
+		return winner;
+	}
 
-    /**
-     * Legt den Wert der winner-Eigenschaft fest.
-     * 
-     * @param value
-     *     allowed object is
-     *     {@link WinMessageType.Winner }
-     *     
-     */
-    public void setWinner(WinMessageType.Winner value) {
-        this.winner = value;
-    }
+	/**
+	 * Legt den Wert der winner-Eigenschaft fest.
+	 * 
+	 * @param value
+	 *            allowed object is {@link WinMessageType.Winner }
+	 * 
+	 */
+	public void setWinner(WinMessageType.Winner value) {
+		this.winner = value;
+	}
 
+	/**
+	 * <p>
+	 * Java-Klasse für anonymous complex type.
+	 * 
+	 * <p>
+	 * Das folgende Schemafragment gibt den erwarteten Content an, der in dieser
+	 * Klasse enthalten ist.
+	 * 
+	 * <pre>
+	 * &lt;complexType>
+	 *   &lt;simpleContent>
+	 *     &lt;extension base="&lt;http://www.w3.org/2001/XMLSchema>string">
+	 *       &lt;attribute name="id" use="required" type="{http://www.w3.org/2001/XMLSchema}int" />
+	 *     &lt;/extension>
+	 *   &lt;/simpleContent>
+	 * &lt;/complexType>
+	 * </pre>
+	 * 
+	 * 
+	 */
+	@XmlAccessorType(XmlAccessType.FIELD)
+	@XmlType(name = "", propOrder = { "value" })
+	public static class Winner {
 
-    /**
-     * <p>Java-Klasse für anonymous complex type.
-     * 
-     * <p>Das folgende Schemafragment gibt den erwarteten Content an, der in dieser Klasse enthalten ist.
-     * 
-     * <pre>
-     * &lt;complexType>
-     *   &lt;simpleContent>
-     *     &lt;extension base="&lt;http://www.w3.org/2001/XMLSchema>string">
-     *       &lt;attribute name="id" use="required" type="{http://www.w3.org/2001/XMLSchema}int" />
-     *     &lt;/extension>
-     *   &lt;/simpleContent>
-     * &lt;/complexType>
-     * </pre>
-     * 
-     * 
-     */
-    @XmlAccessorType(XmlAccessType.FIELD)
-    @XmlType(name = "", propOrder = {
-        "value"
-    })
-    public static class Winner {
+		@XmlValue
+		protected String value;
+		@XmlAttribute(name = "id", required = true)
+		protected int id;
 
-        @XmlValue
-        protected String value;
-        @XmlAttribute(name = "id", required = true)
-        protected int id;
+		/**
+		 * Ruft den Wert der value-Eigenschaft ab.
+		 * 
+		 * @return possible object is {@link String }
+		 * 
+		 */
+		public String getValue() {
+			return value;
+		}
 
-        /**
-         * Ruft den Wert der value-Eigenschaft ab.
-         * 
-         * @return
-         *     possible object is
-         *     {@link String }
-         *     
-         */
-        public String getValue() {
-            return value;
-        }
+		/**
+		 * Legt den Wert der value-Eigenschaft fest.
+		 * 
+		 * @param value
+		 *            allowed object is {@link String }
+		 * 
+		 */
+		public void setValue(String value) {
+			this.value = value;
+		}
 
-        /**
-         * Legt den Wert der value-Eigenschaft fest.
-         * 
-         * @param value
-         *     allowed object is
-         *     {@link String }
-         *     
-         */
-        public void setValue(String value) {
-            this.value = value;
-        }
+		/**
+		 * Ruft den Wert der id-Eigenschaft ab.
+		 * 
+		 */
+		public int getId() {
+			return id;
+		}
 
-        /**
-         * Ruft den Wert der id-Eigenschaft ab.
-         * 
-         */
-        public int getId() {
-            return id;
-        }
+		/**
+		 * Legt den Wert der id-Eigenschaft fest.
+		 * 
+		 */
+		public void setId(int value) {
+			this.id = value;
+		}
 
-        /**
-         * Legt den Wert der id-Eigenschaft fest.
-         * 
-         */
-        public void setId(int value) {
-            this.id = value;
-        }
-
-    }
+	}
 
 }

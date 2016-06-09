@@ -5,10 +5,8 @@ package client;
 
 import generated.BoardType;
 import generated.CardType;
-import generated.MoveMessageType;
-import generated.PositionType;
 import generated.CardType.Pin;
-import server.Board;
+import generated.PositionType;
 import server.Card;
 import server.Messages;
 import server.Position;
@@ -99,10 +97,11 @@ public class BoardGenerator extends BoardType {
 	public CardType getCard(int row, int col) {
 		return board.getRow().get(row).getCol().get(col);
 	}
-	
+
 	public String boardToString() {
 		StringBuilder sb = new StringBuilder();
-//		sb.append("Board [currentTreasure=" + currentTreasure + "]\n"); //$NON-NLS-1$ //$NON-NLS-2$
+		// sb.append("Board [currentTreasure=" + currentTreasure + "]\n");
+		// //$NON-NLS-1$ //$NON-NLS-2$
 		sb.append(Messages.getString("Board.Board")); //$NON-NLS-1$
 		sb.append(" ------ ------ ------ ------ ------ ------ ------ \n"); //$NON-NLS-1$
 		for (int i = 0; i < getRow().size(); i++) {
@@ -176,6 +175,5 @@ public class BoardGenerator extends BoardType {
 
 		return sb.toString();
 	}
-
 
 }
