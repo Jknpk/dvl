@@ -18,7 +18,7 @@ public class Settings {
 	/**
 	 * Den Detailgrad der Ausgaben festlegen
 	 */
-	public final static DebugLevel DEBUGLEVEL = DebugLevel.DEFAULT;
+	public final static DebugLevel DEBUGLEVEL = DebugLevel.DEBUG;
 
 	/**
 	 * Startwert fuer die Spieleranzahl Kann aber noch veraendert werden,
@@ -51,7 +51,7 @@ public class Settings {
 	/**
 	 * Die Zeit in Milisekunden, die das Einschieben der Shiftcard dauern soll
 	 */
-	public static int SHIFTDELAY = 1000;
+	public static int SHIFTDELAY = 3000;
 	/**
 	 * Wenn TESTBOARD = true ist, dann ist das Spielbrett bei jedem Start
 	 * identisch (zum Debugging)

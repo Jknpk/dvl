@@ -47,6 +47,7 @@ public class OliTaktik implements Taktik {
 		this.ownPlayerId = ownPlayerId;
 		myPosition = new PositionType();
 		treasurePosition = new PositionType();
+		BoardGenerator generator = new BoardGenerator(board);
 		// print treasure to go
 		System.out.println("Treasure to go: " + treasure.name() + "\n");
 
@@ -58,6 +59,11 @@ public class OliTaktik implements Taktik {
 
 		// shift board to get acutely board after shifting
 		PositionType input = createRandomPositionForShiftedCard();
+
+		System.out.println(input.getRow());
+		System.out.println(input.getCol());
+		board = generator.proceedShift(board, input, shiftCard);
+		printBoard();
 		shiftBoard(input);
 
 		findMyPinPositionAndTreasurePosition();
@@ -80,7 +86,7 @@ public class OliTaktik implements Taktik {
 			}
 		}
 		if (!direct) {
-
+//			myPosition = positionsToGo.get(positionsToGo.size() - 1);
 		}
 
 		MoveMessageType moveMessage = new MoveMessageType();
