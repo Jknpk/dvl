@@ -56,6 +56,10 @@ public class OliTaktik implements Taktik {
 		// print shifted card
 		printShiftedCard();
 
+		// shift board to get acutely board after shifting
+		PositionType input = createRandomPositionForShiftedCard();
+		shiftBoard(input);
+		
 		findMyPinPositionAndTreasurePosition();
 
 		// find treasure and pin on board
@@ -73,6 +77,7 @@ public class OliTaktik implements Taktik {
 					&& positionType.getRow() == treasurePosition.getRow()) {
 				myPosition = treasurePosition;
 				direct = true;
+				break;
 			}
 		}
 		if (!direct) {
@@ -80,14 +85,17 @@ public class OliTaktik implements Taktik {
 		}
 
 		MoveMessageType moveMessage = new MoveMessageType();
-		PositionType input = createRandomPosition();
 		moveMessage.setShiftPosition(input);
 		moveMessage.setShiftCard(shiftCard);
 		moveMessage.setNewPinPos(myPosition);
 		return moveMessage;
 	}
 
-	private PositionType createRandomPosition() {
+	private void shiftBoard(PositionType input) {
+		// TODO shift board. maybe shift in createRandomPositionForShiftedCard()
+	}
+
+	private PositionType createRandomPositionForShiftedCard() {
 		PositionType ret = new PositionType();
 		int OBEN = 0;
 		int LINKS = 1;
@@ -148,14 +156,15 @@ public class OliTaktik implements Taktik {
 
 	private void top(PositionType tmp, List<PositionType> ret) {
 		if (tmp.getRow() == 0) {
-			if (board.getRow().get(6).getCol().get(tmp.getCol()).getOpenings().isBottom()) {
-				PositionType newPos = new PositionType();
-				newPos.setCol(tmp.getCol());
-				newPos.setRow(6);
-				if (!positionInRet(newPos, ret)) {
-					findPositions(newPos, ret);
-				}
-			}
+			return;
+//			if (board.getRow().get(6).getCol().get(tmp.getCol()).getOpenings().isBottom()) {
+//				PositionType newPos = new PositionType();
+//				newPos.setCol(tmp.getCol());
+//				newPos.setRow(6);
+//				if (!positionInRet(newPos, ret)) {
+//					findPositions(newPos, ret);
+//				}
+//			}
 		} else {
 			if (board.getRow().get(tmp.getRow() - 1).getCol().get(tmp.getCol()).getOpenings().isBottom()) {
 				PositionType newPos = new PositionType();
@@ -170,14 +179,15 @@ public class OliTaktik implements Taktik {
 
 	private void rigth(PositionType tmp, List<PositionType> ret) {
 		if (tmp.getCol() == 6) {
-			if (board.getRow().get(tmp.getRow()).getCol().get(0).getOpenings().isLeft()) {
-				PositionType newPos = new PositionType();
-				newPos.setCol(0);
-				newPos.setRow(tmp.getRow());
-				if (!positionInRet(newPos, ret)) {
-					findPositions(newPos, ret);
-				}
-			}
+			return;
+//			if (board.getRow().get(tmp.getRow()).getCol().get(0).getOpenings().isLeft()) {
+//				PositionType newPos = new PositionType();
+//				newPos.setCol(0);
+//				newPos.setRow(tmp.getRow());
+//				if (!positionInRet(newPos, ret)) {
+//					findPositions(newPos, ret);
+//				}
+//			}
 		} else {
 			if (board.getRow().get(tmp.getRow()).getCol().get(tmp.getCol() + 1).getOpenings().isLeft()) {
 				PositionType newPos = new PositionType();
@@ -192,14 +202,15 @@ public class OliTaktik implements Taktik {
 
 	private void left(PositionType tmp, List<PositionType> ret) {
 		if (tmp.getCol() == 0) {
-			if (board.getRow().get(tmp.getRow()).getCol().get(6).getOpenings().isRight()) {
-				PositionType newPos = new PositionType();
-				newPos.setCol(0);
-				newPos.setRow(tmp.getRow());
-				if (!positionInRet(newPos, ret)) {
-					findPositions(newPos, ret);
-				}
-			}
+			return;
+//			if (board.getRow().get(tmp.getRow()).getCol().get(6).getOpenings().isRight()) {
+//				PositionType newPos = new PositionType();
+//				newPos.setCol(0);
+//				newPos.setRow(tmp.getRow());
+//				if (!positionInRet(newPos, ret)) {
+//					findPositions(newPos, ret);
+//				}
+//			}
 		} else {
 			if (board.getRow().get(tmp.getRow()).getCol().get(tmp.getCol() - 1).getOpenings().isRight()) {
 				PositionType newPos = new PositionType();
@@ -223,15 +234,16 @@ public class OliTaktik implements Taktik {
 
 	private void bottem(PositionType tmp, List<PositionType> ret) {
 		if (tmp.getRow() == 6) {
-			if (board.getRow().get(0).getCol().get(tmp.getCol()).getOpenings().isTop()) {
-				ret.add(tmp);
-				PositionType newPos = new PositionType();
-				newPos.setCol(tmp.getCol());
-				newPos.setRow(0);
-				if (!positionInRet(newPos, ret)) {
-					findPositions(newPos, ret);
-				}
-			}
+			return;
+//			if (board.getRow().get(0).getCol().get(tmp.getCol()).getOpenings().isTop()) {
+//				ret.add(tmp);
+//				PositionType newPos = new PositionType();
+//				newPos.setCol(tmp.getCol());
+//				newPos.setRow(0);
+//				if (!positionInRet(newPos, ret)) {
+//					findPositions(newPos, ret);
+//				}
+//			}
 		} else if (board.getRow().get(tmp.getRow() + 1).getCol().get(tmp.getCol()).getOpenings().isTop()) {
 			ret.add(tmp);
 			PositionType newPos = new PositionType();
