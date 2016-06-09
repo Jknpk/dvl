@@ -118,6 +118,9 @@ public class OliTaktik implements Taktik {
 			ret.setCol(6);
 			ret.setRow(possilble[position]);
 		}
+		if (board.getForbidden() == null) {
+			return ret;
+		}
 		if (!equalsPositionTypes(ret, board.getForbidden())) {
 			return ret;
 		}
