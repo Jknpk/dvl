@@ -31,6 +31,7 @@ public class OliTaktik implements Taktik {
 	private int ownPlayerId;
 	private CardType shiftCard;
 	private PositionType treasurePosition;
+	private PositionType newPosition;
 
 	/*
 	 * (non-Javadoc)
@@ -101,36 +102,40 @@ public class OliTaktik implements Taktik {
 	}
 
 	private PositionType createRandomPositionForShiftedCard() {
+		TurnThread t = new TurnThread(board,shiftCard,myPosition,treasurePosition);
 		PositionType ret = new PositionType();
-		int OBEN = 0;
-		int LINKS = 1;
-		int RECHTS = 2;
-		int UNTEN = 3;
-		Random randomStelle = new Random();
-		int[] possilble = { 1, 3, 5 };
-		Random randomPosition = new Random();
-		int position = randomPosition.nextInt(3);
-		int stelle = randomStelle.nextInt(4);
-		if (stelle == OBEN) {
-			ret.setRow(0);
-			ret.setCol(possilble[position]);
-		} else if (stelle == UNTEN) {
-			ret.setRow(6);
-			ret.setCol(possilble[position]);
-		} else if (stelle == LINKS) {
-			ret.setCol(0);
-			ret.setRow(possilble[position]);
-		} else if (stelle == RECHTS) {
-			ret.setCol(6);
-			ret.setRow(possilble[position]);
-		}
-		if (board.getForbidden() == null) {
-			return ret;
-		}
-		if (!equalsPositionTypes(ret, board.getForbidden())) {
-			return ret;
-		}
-		return createRandomPositionForShiftedCard();
+//		int OBEN = 0;
+//		int LINKS = 1;
+//		int RECHTS = 2;
+//		int UNTEN = 3;
+//		Random randomStelle = new Random();
+//		int[] possilble = { 1, 3, 5 };
+//		Random randomPosition = new Random();
+//		int position = randomPosition.nextInt(3);
+//		int stelle = randomStelle.nextInt(4);
+//		if (stelle == OBEN) {
+//			ret.setRow(0);
+//			ret.setCol(possilble[position]);
+//		} else if (stelle == UNTEN) {
+//			ret.setRow(6);
+//			ret.setCol(possilble[position]);
+//		} else if (stelle == LINKS) {
+//			ret.setCol(0);
+//			ret.setRow(possilble[position]);
+//		} else if (stelle == RECHTS) {
+//			ret.setCol(6);
+//			ret.setRow(possilble[position]);
+//		}
+//		if (board.getForbidden() == null) {
+//			return ret;
+//		}
+//		if (!equalsPositionTypes(ret, board.getForbidden())) {
+//			return ret;
+//		}
+//		return createRandomPositionForShiftedCard();
+		t.start();
+		ret = t.getNewPosition();
+		return ret;
 	}
 
 	private List<PositionType> possibleMoves() {
@@ -149,7 +154,7 @@ public class OliTaktik implements Taktik {
 		Openings openingsMyPosition = cardType.getOpenings();
 		ret.add(tmp);
 		System.out.println("can go to " + tmp.getRow() + "\t" + tmp.getCol());
-		// TODO check ob die andere karte für uns offen ist!
+		// TODO check ob die andere karte f��r uns offen ist!
 		if (openingsMyPosition.isBottom()) {
 			bottem(tmp, ret);
 		}
@@ -300,6 +305,9 @@ public class OliTaktik implements Taktik {
 
 	private boolean equalsPositionTypes(PositionType a, PositionType b) {
 		return a.getCol() == b.getCol() && a.getRow() == b.getRow();
+	}
+	public void setNewPositn(PositionType np){
+		newPosition = np;
 	}
 
 }

@@ -3,8 +3,12 @@
  */
 package client;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import generated.BoardType;
 import generated.CardType;
+import generated.CardType.Openings;
 import generated.CardType.Pin;
 import generated.PositionType;
 import server.Card;
@@ -76,7 +80,7 @@ public class BoardGenerator extends BoardType {
 		if (!shiftCard.getPin().getPlayerID().isEmpty()) {
 			// Figur zwischenspeichern
 			Pin temp = shiftCard.getPin();
-			// Figur auf SchiebeKarte löschen
+			// Figur auf SchiebeKarte l��schen
 			shiftCard.setPin(new Pin());
 			// Zwischengespeicherte Figut auf
 			// neuer Karte plazieren
@@ -175,5 +179,35 @@ public class BoardGenerator extends BoardType {
 
 		return sb.toString();
 	}
+	public List<PositionType> getDirectReachablePositions(PositionType position) {
+		List<PositionType> positionen = new ArrayList<PositionType>();
+		CardType k = this.getCard(position.getRow(), position.getCol());
+		Openings openings = k.getOpenings();
+		if (openings.isLeft()) {
+			if (position.getCol() - 1 >= 0
+					&& getCard(position.getRow(), position.getCol() - 1).getOpenings().isRight()) {
+				positionen.add(new Position(position.getRow(), position.getCol() - 1));
+			}
+		}
+		if (openings.isTop()) {
+			if (position.getRow() - 1 >= 0
+					&& getCard(position.getRow() - 1, position.getCol()).getOpenings().isBottom()) {
+				positionen.add(new Position(position.getRow() - 1, position.getCol()));
+			}
+		}
+		if (openings.isRight()) {
+			if (position.getCol() + 1 <= 6
+					&& getCard(position.getRow(), position.getCol() + 1).getOpenings().isLeft()) {
+				positionen.add(new Position(position.getRow(), position.getCol() + 1));
+			}
+		}
+		if (openings.isBottom()) {
+			if (position.getRow() + 1 <= 6 && getCard(position.getRow() + 1, position.getCol()).getOpenings().isTop()) {
+				positionen.add(new Position(position.getRow() + 1, position.getCol()));
+			}
+		}
+		return positionen;
+	}
+	
 
 }
