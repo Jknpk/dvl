@@ -104,38 +104,37 @@ public class OliTaktik implements Taktik {
 	private PositionType createRandomPositionForShiftedCard() {
 		TurnThread t = new TurnThread(board,shiftCard,myPosition,treasurePosition);
 		PositionType ret = new PositionType();
-//		int OBEN = 0;
-//		int LINKS = 1;
-//		int RECHTS = 2;
-//		int UNTEN = 3;
-//		Random randomStelle = new Random();
-//		int[] possilble = { 1, 3, 5 };
-//		Random randomPosition = new Random();
-//		int position = randomPosition.nextInt(3);
-//		int stelle = randomStelle.nextInt(4);
-//		if (stelle == OBEN) {
-//			ret.setRow(0);
-//			ret.setCol(possilble[position]);
-//		} else if (stelle == UNTEN) {
-//			ret.setRow(6);
-//			ret.setCol(possilble[position]);
-//		} else if (stelle == LINKS) {
-//			ret.setCol(0);
-//			ret.setRow(possilble[position]);
-//		} else if (stelle == RECHTS) {
-//			ret.setCol(6);
-//			ret.setRow(possilble[position]);
-//		}
-//		if (board.getForbidden() == null) {
-//			return ret;
-//		}
-//		if (!equalsPositionTypes(ret, board.getForbidden())) {
-//			return ret;
-//		}
-//		return createRandomPositionForShiftedCard();
-		t.start();
-		ret = t.getNewPosition();
-		return ret;
+		int OBEN = 0;
+		int LINKS = 1;
+		int RECHTS = 2;
+		int UNTEN = 3;
+		Random randomStelle = new Random();
+		int[] possilble = { 1, 3, 5 };
+		Random randomPosition = new Random();
+		int position = randomPosition.nextInt(3);
+		int stelle = randomStelle.nextInt(4);
+		if (stelle == OBEN) {
+			ret.setRow(0);
+			ret.setCol(possilble[position]);
+		} else if (stelle == UNTEN) {
+			ret.setRow(6);
+			ret.setCol(possilble[position]);
+		} else if (stelle == LINKS) {
+			ret.setCol(0);
+			ret.setRow(possilble[position]);
+		} else if (stelle == RECHTS) {
+			ret.setCol(6);
+			ret.setRow(possilble[position]);
+		}
+		if (board.getForbidden() == null) {
+			return ret;
+		}
+		if (!equalsPositionTypes(ret, board.getForbidden())) {
+			return ret;
+		}
+		return createRandomPositionForShiftedCard();
+		//t.run();
+		//ret = t.getNewPosition();
 	}
 
 	private List<PositionType> possibleMoves() {
