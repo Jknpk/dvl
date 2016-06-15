@@ -66,7 +66,10 @@ public class OliTaktik implements Taktik {
 		printBoard();
 		shiftBoard(input);
 
-		findMyPinPositionAndTreasurePosition();
+		myPosition = generator.findPlayer(ownPlayerId);
+		treasurePosition = generator.findTreasure(treasure);
+
+		// findMyPinPositionAndTreasurePosition();
 
 		// find treasure and pin on board
 		System.out.println("searched card position\n\trow: " + treasurePosition.getRow() + " column: "

@@ -3,10 +3,15 @@
  */
 package client;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import generated.BoardType;
 import generated.CardType;
+import generated.CardType.Openings;
 import generated.CardType.Pin;
 import generated.PositionType;
+import generated.TreasureType;
 import server.Card;
 import server.Messages;
 import server.Position;
@@ -174,6 +179,72 @@ public class BoardGenerator extends BoardType {
 		}
 
 		return sb.toString();
+	}
+
+	private List<PositionType> getDirectReachablePositions(PositionType position) {
+		List<PositionType> positionen = new ArrayList<PositionType>();
+		CardType k = this.getCard(position.getRow(), position.getCol());
+		Openings openings = k.getOpenings();
+		if (openings.isLeft()) {
+			if (position.getCol() - 1 >= 0
+					&& getCard(position.getRow(), position.getCol() - 1).getOpenings().isRight()) {
+				positionen.add(new Position(position.getRow(), position.getCol() - 1));
+			}
+		}
+		if (openings.isTop()) {
+			if (position.getRow() - 1 >= 0
+					&& getCard(position.getRow() - 1, position.getCol()).getOpenings().isBottom()) {
+				positionen.add(new Position(position.getRow() - 1, position.getCol()));
+			}
+		}
+		if (openings.isRight()) {
+			if (position.getCol() + 1 <= 6
+					&& getCard(position.getRow(), position.getCol() + 1).getOpenings().isLeft()) {
+				positionen.add(new Position(position.getRow(), position.getCol() + 1));
+			}
+		}
+		if (openings.isBottom()) {
+			if (position.getRow() + 1 <= 6 && getCard(position.getRow() + 1, position.getCol()).getOpenings().isTop()) {
+				positionen.add(new Position(position.getRow() + 1, position.getCol()));
+			}
+		}
+		return positionen;
+	}
+
+	public PositionType findPlayer(Integer PlayerID) {
+		for (int i = 0; i < 7; i++) {
+			for (int j = 0; j < 7; j++) {
+				Pin pinsOnCard = getCard(i, j).getPin();
+				for (Integer pin : pinsOnCard.getPlayerID()) {
+					if (pin == PlayerID) {
+						PositionType pos = new PositionType();
+						pos.setCol(j);
+						pos.setRow(i);
+						return pos;
+					}
+				}
+			}
+		}
+		// Pin nicht gefunden.
+		// XXX: Darf eigentlich nicht vorkommen
+		return null;
+	}
+
+	public PositionType findTreasure(TreasureType treasureType) {
+		for (int i = 0; i < 7; i++) {
+			for (int j = 0; j < 7; j++) {
+				TreasureType treasure = getCard(i, j).getTreasure();
+				if (treasure == treasureType) {
+					PositionType pos = new PositionType();
+					pos.setCol(j);
+					pos.setRow(i);
+					return pos;
+				}
+			}
+		}
+		// Schatz nicht gefunden, kann nur bedeuten, dass Schatz sich auf
+		// Schiebekarte befindet
+		return null;
 	}
 
 }
