@@ -1,20 +1,21 @@
 package client;
 
 import generated.BoardType;
+import generated.CardType;
 import generated.PositionType;
 
 public class KI implements Runnable{
 
 	
 
-	private Card shiftCard;
+	private CardType shiftCard;
 	private BoardType actualBoard;
 	private PositionType treasurePosition;
 	private PositionType myPosition;
 	private BoardGenerator generator;
 	
 	
-	public KI(Card shiftCard, BoardType actualBoard, PositionType treasurePosition, PositionType myPosition){
+	public KI(CardType shiftCard, BoardType actualBoard, PositionType treasurePosition, PositionType myPosition){
 		this.shiftCard = shiftCard;
 		this.actualBoard = actualBoard;
 		this.treasurePosition = treasurePosition;

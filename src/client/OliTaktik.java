@@ -48,6 +48,15 @@ public class OliTaktik implements Taktik {
 		this.ownPlayerId = ownPlayerId;
 		myPosition = new PositionType();
 		treasurePosition = new PositionType();
+		
+		//TODO
+		Thread one = new Thread(new KI(shiftCard, board, treasurePosition, myPosition));
+		one.start();
+		
+		Thread two = new Thread(new KI(shiftCard, board, treasurePosition, myPosition));
+		
+		
+		
 		BoardGenerator generator = new BoardGenerator();
 		// print treasure to go
 		System.out.println("Treasure to go: " + treasure.name() + "\n");

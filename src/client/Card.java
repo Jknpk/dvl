@@ -297,6 +297,9 @@ public class Card extends CardType {
 		}
 	}
 
+	//TODO setOrientation
+	
+	
 	public Orientation getOrientation() {
 		switch (getShape()) {
 		case I:
