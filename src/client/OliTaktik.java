@@ -32,6 +32,7 @@ public class OliTaktik implements Taktik {
 	private CardType shiftCard;
 	private PositionType treasurePosition;
 
+
 	/*
 	 * (non-Javadoc)
 	 * 
@@ -64,8 +65,6 @@ public class OliTaktik implements Taktik {
 		System.out.println(input.getCol());
 		board = generator.proceedShift(board, input, shiftCard);
 		printBoard();
-		shiftBoard(input);
-
 		myPosition = generator.findPlayer(ownPlayerId);
 		treasurePosition = generator.findTreasure(treasure);
 
@@ -99,9 +98,6 @@ public class OliTaktik implements Taktik {
 		return moveMessage;
 	}
 
-	private void shiftBoard(PositionType input) {
-		// TODO shift board. maybe shift in createRandomPositionForShiftedCard()
-	}
 
 	private PositionType createRandomPositionForShiftedCard() {
 		PositionType ret = new PositionType();
