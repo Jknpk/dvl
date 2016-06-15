@@ -55,6 +55,8 @@ public class Client {
 			e.printStackTrace();
 		}
 	}
+	
+	
 
 	public void connect() {
 		// Login

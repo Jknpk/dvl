@@ -24,10 +24,8 @@ import tools.DebugLevel;
  */
 public class BoardGenerator extends BoardType {
 
-	private BoardType board;
 
-	public BoardGenerator(BoardType board) {
-		this.board = board;
+	public BoardGenerator() {
 	}
 
 	// Fuehrt nur das Hereinschieben der Karte aus!!!
@@ -40,15 +38,15 @@ public class BoardGenerator extends BoardType {
 				int row = sm.getRow();
 				int start = (sm.getCol() + 6) % 12; // Karte die rausgenommen
 													// wird
-				setShiftCard(getCard(row, start));
+				setShiftCard(getCard(row, start, board));
 
 				if (start == 6) {
 					for (int i = 6; i > 0; --i) {
-						setCard(row, i, new Card(getCard(row, i - 1)));
+						setCard(row, i, new Card(getCard(row, i - 1, board)),board);
 					}
 				} else {// Start==0
 					for (int i = 0; i < 6; ++i) {
-						setCard(row, i, new Card(getCard(row, i + 1)));
+						setCard(row, i, new Card(getCard(row, i + 1, board)),board);
 					}
 				}
 			}
@@ -58,14 +56,14 @@ public class BoardGenerator extends BoardType {
 				int col = sm.getCol();
 				int start = (sm.getRow() + 6) % 12; // Karte die rausgenommen
 													// wird
-				setShiftCard(getCard(start, col));
+				setShiftCard(getCard(start, col, board));
 				if (start == 6) {
 					for (int i = 6; i > 0; --i) {
-						setCard(i, col, new Card(getCard(i - 1, col)));
+						setCard(i, col, new Card(getCard(i - 1, col, board)), board);
 					}
 				} else {// Start==0
 					for (int i = 0; i < 6; ++i) {
-						setCard(i, col, new Card(getCard(i + 1, col)));
+						setCard(i, col, new Card(getCard(i + 1, col, board)), board);
 					}
 				}
 
@@ -81,140 +79,31 @@ public class BoardGenerator extends BoardType {
 		if (!shiftCard.getPin().getPlayerID().isEmpty()) {
 			// Figur zwischenspeichern
 			Pin temp = shiftCard.getPin();
-			// Figur auf SchiebeKarte löschen
+			// Figur auf SchiebeKarte l��schen
 			shiftCard.setPin(new Pin());
 			// Zwischengespeicherte Figut auf
 			// neuer Karte plazieren
 			c.setPin(temp);
 		}
-		setCard(sm.getRow(), sm.getCol(), c);
-		this.board = board;
+		setCard(sm.getRow(), sm.getCol(), c, board);
 		return board;
 	}
 
-	public void setCard(int row, int col, Card c) {
+	public void setCard(int row, int col, Card c, BoardType board) {
 		// Muss ueberschrieben werden, daher zuerst entfernen und dann...
 		board.getRow().get(row).getCol().remove(col);
 		// ...hinzufuegen
 		board.getRow().get(row).getCol().add(col, c);
 	}
 
-	public CardType getCard(int row, int col) {
+	public CardType getCard(int row, int col, BoardType board) {
 		return board.getRow().get(row).getCol().get(col);
 	}
 
-	public String boardToString() {
-		StringBuilder sb = new StringBuilder();
-		// sb.append("Board [currentTreasure=" + currentTreasure + "]\n");
-		// //$NON-NLS-1$ //$NON-NLS-2$
-		sb.append(Messages.getString("Board.Board")); //$NON-NLS-1$
-		sb.append(" ------ ------ ------ ------ ------ ------ ------ \n"); //$NON-NLS-1$
-		for (int i = 0; i < getRow().size(); i++) {
-			StringBuilder line1 = new StringBuilder("|"); //$NON-NLS-1$
-			StringBuilder line2 = new StringBuilder("|"); //$NON-NLS-1$
-			StringBuilder line3 = new StringBuilder("|"); //$NON-NLS-1$
-			StringBuilder line4 = new StringBuilder("|"); //$NON-NLS-1$
-			StringBuilder line5 = new StringBuilder("|"); //$NON-NLS-1$
-			StringBuilder line6 = new StringBuilder("|"); //$NON-NLS-1$
-			for (int j = 0; j < getRow().get(i).getCol().size(); j++) {
-				Card c = new Card(getCard(i, j));
-				if (c.getOpenings().isTop()) {
-					line1.append("##  ##|"); //$NON-NLS-1$
-					line2.append("##  ##|"); //$NON-NLS-1$
-				} else {
-					line1.append("######|"); //$NON-NLS-1$
-					line2.append("######|"); //$NON-NLS-1$
-				}
-				if (c.getOpenings().isLeft()) {
-					line3.append("  "); //$NON-NLS-1$
-					line4.append("  "); //$NON-NLS-1$
-				} else {
-					line3.append("##"); //$NON-NLS-1$
-					line4.append("##"); //$NON-NLS-1$
-				}
-				if (c.getPin().getPlayerID().size() != 0) {
-					line3.append("S"); //$NON-NLS-1$
-				} else {
-					line3.append(" "); //$NON-NLS-1$
-				}
-				if (c.getTreasure() != null) {
-					String name = c.getTreasure().name();
-					switch (name.charAt(1)) {
-					case 'Y':
-						// Symbol
-						line3.append("T"); //$NON-NLS-1$
-						break;
-					case 'T':
-						// Startpunkt
-						line3.append("S"); //$NON-NLS-1$
-						break;
-					}
-					line4.append(name.substring(name.length() - 2));
-				} else {
-					line3.append(" "); //$NON-NLS-1$
-					line4.append("  "); //$NON-NLS-1$
-				}
-				if (c.getOpenings().isRight()) {
-					line3.append("  |"); //$NON-NLS-1$
-					line4.append("  |"); //$NON-NLS-1$
-				} else {
-					line3.append("##|"); //$NON-NLS-1$
-					line4.append("##|"); //$NON-NLS-1$
-				}
-				if (c.getOpenings().isBottom()) {
-					line5.append("##  ##|"); //$NON-NLS-1$
-					line6.append("##  ##|"); //$NON-NLS-1$
-				} else {
-					line5.append("######|"); //$NON-NLS-1$
-					line6.append("######|"); //$NON-NLS-1$
-				}
-			}
-			sb.append(line1.toString() + "\n"); //$NON-NLS-1$
-			sb.append(line2.toString() + "\n"); //$NON-NLS-1$
-			sb.append(line3.toString() + "\n"); //$NON-NLS-1$
-			sb.append(line4.toString() + "\n"); //$NON-NLS-1$
-			sb.append(line5.toString() + "\n"); //$NON-NLS-1$
-			sb.append(line6.toString() + "\n"); //$NON-NLS-1$
-			sb.append(" ------ ------ ------ ------ ------ ------ ------ \n"); //$NON-NLS-1$
-		}
-
-		return sb.toString();
-	}
-
-	private List<PositionType> getDirectReachablePositions(PositionType position) {
-		List<PositionType> positionen = new ArrayList<PositionType>();
-		CardType k = this.getCard(position.getRow(), position.getCol());
-		Openings openings = k.getOpenings();
-		if (openings.isLeft()) {
-			if (position.getCol() - 1 >= 0
-					&& getCard(position.getRow(), position.getCol() - 1).getOpenings().isRight()) {
-				positionen.add(new Position(position.getRow(), position.getCol() - 1));
-			}
-		}
-		if (openings.isTop()) {
-			if (position.getRow() - 1 >= 0
-					&& getCard(position.getRow() - 1, position.getCol()).getOpenings().isBottom()) {
-				positionen.add(new Position(position.getRow() - 1, position.getCol()));
-			}
-		}
-		if (openings.isRight()) {
-			if (position.getCol() + 1 <= 6
-					&& getCard(position.getRow(), position.getCol() + 1).getOpenings().isLeft()) {
-				positionen.add(new Position(position.getRow(), position.getCol() + 1));
-			}
-		}
-		if (openings.isBottom()) {
-			if (position.getRow() + 1 <= 6 && getCard(position.getRow() + 1, position.getCol()).getOpenings().isTop()) {
-				positionen.add(new Position(position.getRow() + 1, position.getCol()));
-			}
-		}
-		return positionen;
-	}
-
-	public PositionType findPlayer(Integer PlayerID) {
+	public PositionType findPlayer(Integer PlayerID, BoardType board) {
 		for (int i = 0; i < 7; i++) {
 			for (int j = 0; j < 7; j++) {
-				Pin pinsOnCard = getCard(i, j).getPin();
+				Pin pinsOnCard = getCard(i, j, board).getPin();
 				for (Integer pin : pinsOnCard.getPlayerID()) {
 					if (pin == PlayerID) {
 						PositionType pos = new PositionType();
@@ -230,10 +119,10 @@ public class BoardGenerator extends BoardType {
 		return null;
 	}
 
-	public PositionType findTreasure(TreasureType treasureType) {
+	public PositionType findTreasure(TreasureType treasureType, BoardType board) {
 		for (int i = 0; i < 7; i++) {
 			for (int j = 0; j < 7; j++) {
-				TreasureType treasure = getCard(i, j).getTreasure();
+				TreasureType treasure = getCard(i, j, board).getTreasure();
 				if (treasure == treasureType) {
 					PositionType pos = new PositionType();
 					pos.setCol(j);
