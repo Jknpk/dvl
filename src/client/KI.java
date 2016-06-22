@@ -32,6 +32,10 @@ public class KI implements Runnable {
 
 	private MoveRating rateMove(PositionType toRate, PositionType treasurePosition) {
 		// if toRate is safe
+
+		if (toRate.getCol() == treasurePosition.getCol() && toRate.getRow() == treasurePosition.getRow()) {
+			return MoveRating.HIT;
+		}
 		if (isSave(toRate)) {
 			// check if trasurePosition is on a save place
 			if (isSave(treasurePosition)) {
@@ -41,57 +45,57 @@ public class KI implements Runnable {
 					return MoveRating.SAVE_1;
 				} else if (checkSave2(toRate, treasurePosition)) {
 					return MoveRating.SAVE_2;
+				} else if (checkSave3(toRate, treasurePosition)) {
+					return MoveRating.SAVE_3;
+				} else if (checkSave4(toRate, treasurePosition)) {
+					return MoveRating.SAVE_4;
+				} else if (checkSave5(toRate, treasurePosition)) {
+					return MoveRating.SAVE_5;
 				}
 			} else {
-
+				// TODO
 			}
-		} else if (toRate.getCol() == treasurePosition.getCol() && toRate.getRow() == treasurePosition.getRow()) {
-			return MoveRating.HIT;
 		}
 		return MoveRating.STAY;
 	}
 
-	private boolean checkSave2(PositionType toRate, PositionType treasurePosition2) {
-		// max 7
+	private boolean checkSave5(PositionType toRate, PositionType treasurePosition2) {
+		if ((treasurePosition.getRow() == toRate.getRow() - 4 && treasurePosition.getCol() == toRate.getCol() + 4)
+				|| (treasurePosition.getRow() == toRate.getRow() - 4
+						&& treasurePosition.getCol() == toRate.getCol() - 4)
+				|| (treasurePosition.getRow() == toRate.getRow() + 4
+						&& treasurePosition.getCol() == toRate.getCol() + 4)
+				|| (treasurePosition.getRow() == toRate.getRow() + 4
+						&& treasurePosition.getCol() == toRate.getCol() - 4)) {
+			return true;
+		}
+		return false;
+	}
+
+	private boolean checkSave4(PositionType toRate, PositionType treasurePosition2) {
+		if ((treasurePosition.getRow() == toRate.getRow() - 4 && treasurePosition.getCol() == toRate.getCol() - 2)
+				|| (treasurePosition.getRow() == toRate.getRow() - 4
+						&& treasurePosition.getCol() == toRate.getCol() + 2)
+				|| (treasurePosition.getRow() == toRate.getRow() + 4
+						&& treasurePosition.getCol() == toRate.getCol() - 2)
+				|| (treasurePosition.getRow() == toRate.getRow() + 4
+						&& treasurePosition.getCol() == toRate.getCol() + 2)) {
+			return true;
+		}
+		return false;
+	}
+
+	private boolean checkSave3(PositionType toRate, PositionType treasurePosition2) {
 		if (treasurePosition.getRow() == toRate.getRow() - 4 || treasurePosition.getRow() == toRate.getRow() + 4
 				|| treasurePosition.getCol() == toRate.getCol() - 4
 				|| treasurePosition.getCol() == toRate.getCol() + 4) {
 			return true;
-			// check right left corners
-		} // TODO
-		/*
-		 * else if ((treasurePosition.getRow() == toRate.getRow() - 4 &&
-		 * treasurePosition.getCol() == toRate.getCol() - 2) ||
-		 * (treasurePosition.getRow() == toRate.getRow() - 4 &&
-		 * treasurePosition.getCol() == toRate.getCol() - 4) ||
-		 * (treasurePosition.getRow() == toRate.getRow() - 4 &&
-		 * treasurePosition.getCol() == toRate.getCol() + 4) ||
-		 * (treasurePosition.getRow() == toRate.getRow() - 4 &&
-		 * treasurePosition.getCol() == toRate.getCol() + 2) ||
-		 * 
-		 * (treasurePosition.getRow() == toRate.getRow() + 4 &&
-		 * treasurePosition.getCol() == toRate.getCol() - 2) ||
-		 * (treasurePosition.getRow() == toRate.getRow() + 4 &&
-		 * treasurePosition.getCol() == toRate.getCol() - 4) ||
-		 * (treasurePosition.getRow() == toRate.getRow() + 4 &&
-		 * treasurePosition.getCol() == toRate.getCol() + 4) ||
-		 * (treasurePosition.getRow() == toRate.getRow() + 4 &&
-		 * treasurePosition.getCol() == toRate.getCol() + 2) ||
-		 * 
-		 * 
-		 * 
-		 */
+		}
 		return false;
 	}
 
-	private boolean checkSave1(PositionType toRate, PositionType treasurePosition2) {
-		if (treasurePosition.getRow() == toRate.getRow() - 2 || treasurePosition.getRow() == toRate.getRow() + 2
-				|| treasurePosition.getCol() == toRate.getCol() - 2
-				|| treasurePosition.getCol() == toRate.getCol() + 2) {
-			return true;
-			// check right left corners
-		} else if ((treasurePosition.getRow() == toRate.getRow() - 2
-				&& treasurePosition.getCol() == toRate.getCol() - 2)
+	private boolean checkSave2(PositionType toRate, PositionType treasurePosition2) {
+		if ((treasurePosition.getRow() == toRate.getRow() - 2 && treasurePosition.getCol() == toRate.getCol() - 2)
 				|| (treasurePosition.getRow() == toRate.getRow() - 2
 						&& treasurePosition.getCol() == toRate.getCol() + 2)
 				|| (treasurePosition.getRow() == toRate.getRow() + 2
@@ -100,6 +104,37 @@ public class KI implements Runnable {
 						&& treasurePosition.getCol() == toRate.getCol() + 2)) {
 			return true;
 		}
+		return false;
+
+		// max 7
+		// if (treasurePosition.getRow() == toRate.getRow() - 4 ||
+		// treasurePosition.getRow() == toRate.getRow() + 4
+		// || treasurePosition.getCol() == toRate.getCol() - 4
+		// || treasurePosition.getCol() == toRate.getCol() + 4) {
+		// return true;
+		// // check right left corners
+		// } // TODO
+
+	}
+
+	private boolean checkSave1(PositionType toRate, PositionType treasurePosition2) {
+		if (treasurePosition.getRow() == toRate.getRow() - 2 || treasurePosition.getRow() == toRate.getRow() + 2
+				|| treasurePosition.getCol() == toRate.getCol() - 2
+				|| treasurePosition.getCol() == toRate.getCol() + 2) {
+			return true;
+			// check right left corners
+		}
+		// check2
+		// else if ((treasurePosition.getRow() == toRate.getRow() - 2
+		// && treasurePosition.getCol() == toRate.getCol() - 2)
+		// || (treasurePosition.getRow() == toRate.getRow() - 2
+		// && treasurePosition.getCol() == toRate.getCol() + 2)
+		// || (treasurePosition.getRow() == toRate.getRow() + 2
+		// && treasurePosition.getCol() == toRate.getCol() - 2)
+		// || (treasurePosition.getRow() == toRate.getRow() + 2
+		// && treasurePosition.getCol() == toRate.getCol() + 2)) {
+		// return true;
+		// }
 		return false;
 	}
 
