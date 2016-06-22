@@ -36,11 +36,10 @@ public class KI implements Runnable {
 		if (toRate.getCol() == treasurePosition.getCol() && toRate.getRow() == treasurePosition.getRow()) {
 			return MoveRating.HIT;
 		}
+		// verändert nur die position wenn man auf eine feste Position kann
 		if (isSave(toRate)) {
 			// check if trasurePosition is on a save place
 			if (isSave(treasurePosition)) {
-				// max 8 positions with SAVE1
-				// check left and rigth
 				if (checkSave1(toRate, treasurePosition)) {
 					return MoveRating.SAVE_1;
 				} else if (checkSave2(toRate, treasurePosition)) {
@@ -54,9 +53,110 @@ public class KI implements Runnable {
 				}
 			} else {
 				// TODO
+				// in der mitte von 2 festen
+				if (treasurePosition.getRow() % 2 != 0 && treasurePosition.getCol() % 2 != 0) {
+					if (checkMiddle(toRate, treasurePosition) != null) {
+						return checkMiddle(toRate, treasurePosition);
+					}
+				}
+				// links und rechts sind fest
+				if (treasurePosition.getRow() % 2 != 0 && treasurePosition.getCol() % 2 == 0) {
+					// TODO
+					if (checkLeftRight(toRate, treasurePosition) != null) {
+						return checkLeftRight(toRate, treasurePosition);
+					}
+				}
+				// oben und unten sind fest
+				if (treasurePosition.getRow() % 2 == 0 && treasurePosition.getCol() % 2 != 0) {
+					if (checkTopBottem(toRate, treasurePosition) != null) {
+						checkTopBottem(toRate, treasurePosition);
+					}
+				}
 			}
 		}
 		return MoveRating.STAY;
+	}
+
+	private MoveRating checkTopBottem(PositionType toRate, PositionType treasurePosition) {
+		int trasureCol = treasurePosition.getCol();
+		int treasureRow = treasurePosition.getRow();
+		int toRateCol = toRate.getCol();
+		int toRateRow = toRate.getRow();
+		if (treasureRow == toRateRow && trasureCol - 1 == toRateCol
+				|| treasureRow == toRateRow && trasureCol + 1 == toRateCol) {
+			return MoveRating.SAVE_1;
+		}
+		if (treasureRow - 2 == toRateRow && trasureCol - 1 == toRateCol
+				|| treasureRow - 2 == toRateRow && trasureCol + 1 == toRateCol
+				|| treasureRow + 2 == toRateRow && trasureCol - 1 == toRateCol
+				|| treasureRow + 2 == toRateRow && trasureCol + 1 == toRateCol
+				|| treasureRow == toRateRow && trasureCol + 3 == toRateCol
+				|| treasureRow == toRateRow && trasureCol + 3 == toRateCol) {
+			return MoveRating.SAVE_2;
+		}
+		if (treasureRow - 2 == toRateRow && trasureCol - 3 == toRateCol
+				|| treasureRow - 2 == toRateRow && trasureCol + 3 == toRateCol
+				|| treasureRow + 2 == toRateRow && trasureCol - 3 == toRateCol
+				|| treasureRow + 2 == toRateRow && trasureCol + 3 == toRateCol) {
+			return MoveRating.SAVE_3;
+		}
+		return null;
+	}
+
+	private MoveRating checkLeftRight(PositionType toRate, PositionType treasurePosition2) {
+		int trasureCol = treasurePosition.getCol();
+		int treasureRow = treasurePosition.getRow();
+		int toRateCol = toRate.getCol();
+		int toRateRow = toRate.getRow();
+		if ((treasureRow - 1 == toRateRow || treasureRow + 1 == toRateRow) && trasureCol == toRateCol) {
+			return MoveRating.SAVE_1;
+		}
+		if ((trasureCol + 3 == toRateCol || trasureCol - 3 == toRateCol) && trasureCol == toRateCol
+				|| trasureCol + 2 == toRateCol && treasureRow - 1 == toRateRow
+				|| trasureCol + 2 == toRateCol && treasureRow + 1 == toRateRow
+				|| trasureCol - 2 == toRateCol && treasureRow - 1 == toRateRow
+				|| trasureCol - 2 == toRateCol && treasureRow + 1 == toRateRow) {
+			return MoveRating.SAVE_2;
+		}
+		if (treasureRow + 3 == toRateRow && trasureCol + 2 == toRateCol
+				|| treasureRow - 3 == toRateRow && trasureCol + 2 == toRateCol
+				|| treasureRow + 3 == toRateRow && trasureCol - 2 == toRateCol
+				|| treasureRow - 3 == toRateRow && trasureCol - 2 == toRateCol) {
+			return MoveRating.SAVE_3;
+		}
+		return null;
+
+	}
+
+	private MoveRating checkMiddle(PositionType toRate, PositionType treasurePosition) {
+		int trasureCol = treasurePosition.getCol();
+		int treasureRow = treasurePosition.getRow();
+		int toRateCol = toRate.getCol();
+		int toRateRow = toRate.getRow();
+		if (trasureCol - 1 == toRateCol && treasureRow - 1 == toRateRow
+				|| trasureCol + 1 == toRateCol && treasureRow - 1 == toRateRow
+				|| trasureCol - 1 == toRateCol && treasureRow + 1 == toRateRow
+				|| trasureCol + 1 == toRateCol && treasureRow + 1 == toRateRow) {
+			return MoveRating.SAVE_1;
+		}
+		if (trasureCol - 3 == toRateCol && treasureRow - 1 == toRateRow
+				|| trasureCol - 3 == toRateCol && treasureRow + 1 == toRateRow
+				|| trasureCol + 3 == toRateCol && treasureRow - 1 == toRateRow
+				|| trasureCol + 3 == toRateCol && treasureRow + 1 == toRateRow
+
+				|| trasureCol - 1 == toRateCol && treasureRow - 3 == toRateRow
+				|| trasureCol - 1 == toRateCol && treasureRow + 3 == toRateRow
+				|| trasureCol + 1 == toRateCol && treasureRow - 3 == toRateRow
+				|| trasureCol + 1 == toRateCol && treasureRow + 3 == toRateRow) {
+			return MoveRating.SAVE_2;
+		}
+		if (trasureCol - 2 == toRateCol && treasureRow - 2 == toRateRow
+				|| trasureCol + 2 == toRateCol && treasureRow - 2 == toRateRow
+				|| trasureCol - 2 == toRateCol && treasureRow + 2 == toRateRow
+				|| trasureCol + 2 == toRateCol && treasureRow + 2 == toRateRow) {
+			return MoveRating.SAVE_3;
+		}
+		return null;
 	}
 
 	private boolean checkSave5(PositionType toRate, PositionType treasurePosition2) {
