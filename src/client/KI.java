@@ -2,6 +2,7 @@ package client;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.Callable;
 
 import generated.BoardType;
 import generated.CardType;
@@ -9,14 +10,14 @@ import generated.PositionType;
 import generated.TreasureType;
 import generated.CardType.Openings;
 
-public class KI implements Runnable {
+public class KI implements Callable<BestCardPosition> {
 
 	private CardType shiftCard;
 	private BoardType actualBoard;
 	private PositionType treasurePosition;
 	private PositionType myPosition;
 	private BoardGenerator generator;
-	private BoardType newBoard = null;
+	private BoardType newBoard;
 	private TreasureType actualTreasure;
 
 	public KI(CardType shiftCard, BoardType actualBoard, PositionType treasurePosition, PositionType myPosition, TreasureType actualTreasure) {
@@ -246,7 +247,8 @@ public class KI implements Runnable {
 	}
 
 	@Override
-	public void run() {
+	public BestCardPosition call() {
+		BestCardPosition bcp = null;
 		int[] aussen = {0,6};
 		int[] innen = {1,3,5};
 		for(int i = 0; i < 2; i++){
@@ -262,26 +264,52 @@ public class KI implements Runnable {
 						shiftPosition.setCol(aussen[j]);
 						
 					}
-
-					if(!actualBoard.getForbidden().equals(shiftPosition)){
+					if(actualBoard.getForbidden() == null){
 						// Jetzt gehts ab!
 						newBoard = generator.proceedShift(actualBoard, shiftPosition, shiftCard);
 						
 						// list with all possible moves
 						List<PositionType> positionsToGo = possibleMoves();
 						for(PositionType singlePositiontoRate:positionsToGo){
-							rateMove(singlePositiontoRate, generator.findTreasure(actualTreasure, newBoard));
-						}
-						
-						
-						
-						
+							
+							if(bcp == null){
+								System.out.println("sptr: " + singlePositiontoRate);
+								System.out.println("at: " + actualTreasure);
+								System.out.println("nb: " + newBoard);
+								bcp = new BestCardPosition(shiftPosition, singlePositiontoRate, shiftCard, rateMove(singlePositiontoRate, generator.findTreasure(actualTreasure, newBoard)));
+							}
+							else{
+								BestCardPosition possibleNewBcp = new BestCardPosition(shiftPosition, singlePositiontoRate, shiftCard, rateMove(singlePositiontoRate, generator.findTreasure(actualTreasure, newBoard)));
+								if(bcp.getMr().getValue() < possibleNewBcp.getMr().getValue()) {
+									bcp = possibleNewBcp;
+								}
+							}		
+						}	
 					}
 					
+					else if(!actualBoard.getForbidden().equals(shiftPosition)){
+						// Jetzt gehts ab!
+						newBoard = generator.proceedShift(actualBoard, shiftPosition, shiftCard);
+						
+						// list with all possible moves
+						List<PositionType> positionsToGo = possibleMoves();
+						for(PositionType singlePositiontoRate:positionsToGo){
+							
+							if(bcp == null){
+								bcp = new BestCardPosition(shiftPosition, singlePositiontoRate, shiftCard, rateMove(singlePositiontoRate, generator.findTreasure(actualTreasure, newBoard)));
+							}
+							else{
+								BestCardPosition possibleNewBcp = new BestCardPosition(shiftPosition, singlePositiontoRate, shiftCard, rateMove(singlePositiontoRate, generator.findTreasure(actualTreasure, newBoard)));
+								if(bcp.getMr().getValue() < possibleNewBcp.getMr().getValue()) {
+									bcp = possibleNewBcp;
+								}
+							}		
+						}	
+					}
 				}
 			}
 		}
-
+		return bcp;
 	}
 	
 	private List<PositionType> possibleMoves() {
@@ -300,7 +328,7 @@ public class KI implements Runnable {
 		Openings openingsMyPosition = cardType.getOpenings();
 		ret.add(tmp);
 		System.out.println("can go to " + tmp.getRow() + "\t" + tmp.getCol());
-		// TODO check ob die andere karte fï¿½ï¿½r uns offen ist!
+		// TODO check ob die andere karte für uns offen ist!
 		if (openingsMyPosition.isBottom()) {
 			bottem(tmp, ret);
 		}

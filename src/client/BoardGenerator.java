@@ -69,7 +69,7 @@ public class BoardGenerator extends BoardType {
 
 			}
 		}
-		forbidden = sm.getOpposite();
+		forbidden = sm.getOpposite(); //TODO: muss das hier raus?
 		Card c = null;
 		c = new Card(shiftCard);
 		// Wenn Spielfigur auf neuer shiftcard steht,

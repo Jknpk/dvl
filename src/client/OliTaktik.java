@@ -6,6 +6,10 @@ package client;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
+import java.util.concurrent.ExecutionException;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
+import java.util.concurrent.Future;
 
 import generated.AwaitMoveMessageType;
 import generated.BoardType;
@@ -45,69 +49,105 @@ public class OliTaktik implements Taktik {
 		foundTreasures = awaitMoveMessage.getFoundTreasures();
 		treasure = awaitMoveMessage.getTreasure();
 		treasuresToGo = awaitMoveMessage.getTreasuresToGo();
+		shiftCard = awaitMoveMessage.getBoard().getShiftCard();
 		this.ownPlayerId = ownPlayerId;
 		myPosition = new PositionType();
 		treasurePosition = new PositionType();
 		
 		//TODO
-		Thread one = new Thread(new KI(shiftCard, board, treasurePosition, myPosition, treasure));
-		one.start();
 		
-		Thread two = new Thread(new KI(shiftCard, board, treasurePosition, myPosition, treasure));
+		final ExecutorService service;
+		final Future<BestCardPosition> task1;
+		final Future<BestCardPosition> task2;
+		final Future<BestCardPosition> task3;
+		final Future<BestCardPosition> task4;
+		
+		service = Executors.newFixedThreadPool(4);
+		
+		Card cardShiftCard= new Card(shiftCard);
+		List<Card> shiftCards = cardShiftCard.getPossibleRotations();
+		System.out.println("Laenge von shiftCards " + shiftCards.size());
+		task1 = service.submit(new KI(shiftCards.get(0), board, treasurePosition, myPosition, treasure));
+		task2 = service.submit(new KI(shiftCards.get(1), board, treasurePosition, myPosition, treasure));
+		task3 = service.submit(new KI(shiftCards.get(2), board, treasurePosition, myPosition, treasure));
+		task4 = service.submit(new KI(shiftCards.get(3), board, treasurePosition, myPosition, treasure));
+		BestCardPosition[] bcps = new BestCardPosition[4];
+		try{
+			bcps[0] = task1.get();
+			bcps[1] = task2.get();
+			bcps[2] = task3.get();
+			bcps[3] = task4.get();
+		}catch(InterruptedException | ExecutionException e){
+			e.printStackTrace();
+			System.out.println("Dein Scheiﬂ klappt nicht!");
+		}
+		service.shutdown();
+		for(int i = 0; i < 4; i++){
+			System.out.println(bcps[i] + "  " + bcps[i].getMr().getValue());
+		}
+		
+		int best = 0;
+		for(int i = 0; i < 3; i++){
+			if(bcps[i].getMr().getValue() < bcps[i+1].getMr().getValue()){
+				best = i+1;
+			}
+		}
 		
 		
 		
-		BoardGenerator generator = new BoardGenerator();
+		//BoardGenerator generator = new BoardGenerator();
 		// print treasure to go
-		System.out.println("Treasure to go: " + treasure.name() + "\n");
+		//System.out.println("Treasure to go: " + treasure.name() + "\n");
 		// print board
-		printBoard();
+		//printBoard();
 
 		// print shifted card
-		printShiftedCard();
+		//printShiftedCard();
 
 		// shift board to get acutely board after shifting
-		PositionType input = createRandomPositionForShiftedCard();
+		//PositionType input = createRandomPositionForShiftedCard();
 		// TODO my set position after shifting
 
-		System.out.println(input.getRow());
-		System.out.println(input.getCol());
-		board = generator.proceedShift(board, input, shiftCard);
-		printBoard();
-		myPosition = generator.findPlayer(ownPlayerId, board);
-		treasurePosition = generator.findTreasure(treasure, board);
+		//System.out.println(input.getRow());
+		//System.out.println(input.getCol());
+		//board = generator.proceedShift(board, input, shiftCard);
+		//printBoard();
+		//myPosition = generator.findPlayer(ownPlayerId, board);
+		//treasurePosition = generator.findTreasure(treasure, board);
 
 		// findMyPinPositionAndTreasurePosition();
 
 		// find treasure and pin on board
-		System.out.println("searched card position\n\trow: " + treasurePosition.getRow() + " column: "
-				+ treasurePosition.getCol());
-		System.out.println("my position:\t" + myPosition.getRow() + " " + myPosition.getCol());
+		//System.out.println("searched card position\n\trow: " + treasurePosition.getRow() + " column: " + treasurePosition.getCol());
+		//System.out.println("my position:\t" + myPosition.getRow() + " " + myPosition.getCol());
 
 		// list with all possible moves
-		List<PositionType> positionsToGo = possibleMoves();
-		System.err.println(positionsToGo.size());
+		//List<PositionType> positionsToGo = possibleMoves();
+		//System.err.println(positionsToGo.size());
 		// check if i can go direct to treasure position
-		boolean direct = false;
-		for (PositionType positionType : positionsToGo) {
-			if (equalsPositionTypes(treasurePosition, positionType)) {
-				myPosition = treasurePosition;
-				direct = true;
-				break;
-			}
-		}
-		if (!direct) {
+		//boolean direct = false;
+		//for (PositionType positionType : positionsToGo) {
+		//	if (equalsPositionTypes(treasurePosition, positionType)) {
+		//		myPosition = treasurePosition;
+		//		direct = true;
+		//		break;
+		//	}
+		//}
+		//if (!direct) {
 			// myPosition = positionsToGo.get(positionsToGo.size() - 1);
-		}
+		//}
 
 		MoveMessageType moveMessage = new MoveMessageType();
-		moveMessage.setShiftPosition(input);
-		moveMessage.setShiftCard(shiftCard);
-		moveMessage.setNewPinPos(myPosition);
+		moveMessage.setShiftPosition(bcps[best].getShiftPosition());
+		moveMessage.setShiftCard(bcps[best].getShiftCard());
+		moveMessage.setNewPinPos(bcps[best].getNewMyPosition());
 		return moveMessage;
 	}
 
 	
+
+
+
 
 
 	private PositionType createRandomPositionForShiftedCard() {

@@ -8,11 +8,13 @@ public class BestCardPosition {
 	private PositionType shiftPosition;
 	private PositionType newMyPosition;
 	private CardType shiftCard;
+	private MoveRating mr;
 	
-	public BestCardPosition(PositionType shiftPosition, PositionType newMyPosition,CardType shiftCard){
+	public BestCardPosition(PositionType shiftPosition, PositionType newMyPosition,CardType shiftCard, MoveRating mr){
 		this.shiftPosition = shiftPosition;
 		this.newMyPosition = newMyPosition;
 		this.shiftCard = shiftCard;
+		this.mr = mr;
 		
 	}
 
@@ -26,6 +28,10 @@ public class BestCardPosition {
 
 	public CardType getShiftCard() {
 		return shiftCard;
+	}
+
+	public MoveRating getMr() {
+		return mr;
 	}
 	
 	

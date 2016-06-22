@@ -57,19 +57,11 @@ public class Card extends CardType {
 	public List<Card> getPossibleRotations() {
 		List<Card> cards = new ArrayList<Card>();
 		// Reihenfolge und fehlende breaks wichtig
-		switch (getShape()) {
-		case L:
-		case T:
-			cards.add(new Card(getShape(), Orientation.D180, getTreasure()));
-			cards.add(new Card(getShape(), Orientation.D270, getTreasure()));
-		case I:
 			cards.add(new Card(getShape(), Orientation.D0, getTreasure()));
 			cards.add(new Card(getShape(), Orientation.D90, getTreasure()));
-			break;
-		default:
-			System.err.print(Messages.getString("Card.invalidShape")); //$NON-NLS-1$
-			break;
-		}
+			cards.add(new Card(getShape(), Orientation.D180, getTreasure()));
+			cards.add(new Card(getShape(), Orientation.D270, getTreasure()));
+		
 		return cards;
 	}
 
@@ -298,7 +290,7 @@ public class Card extends CardType {
 	}
 
 	//TODO setOrientation
-	
+
 	
 	public Orientation getOrientation() {
 		switch (getShape()) {
@@ -332,5 +324,6 @@ public class Card extends CardType {
 		}
 
 	}
+
 
 }
