@@ -103,7 +103,7 @@ public class KI implements Runnable {
 		return null;
 	}
 
-	private MoveRating checkLeftRight(PositionType toRate, PositionType treasurePosition2) {
+	private MoveRating checkLeftRight(PositionType toRate, PositionType treasurePosition) {
 		int trasureCol = treasurePosition.getCol();
 		int treasureRow = treasurePosition.getRow();
 		int toRateCol = toRate.getCol();
@@ -159,7 +159,7 @@ public class KI implements Runnable {
 		return null;
 	}
 
-	private boolean checkSave5(PositionType toRate, PositionType treasurePosition2) {
+	private boolean checkSave5(PositionType toRate, PositionType treasurePosition) {
 		if ((treasurePosition.getRow() == toRate.getRow() - 4 && treasurePosition.getCol() == toRate.getCol() + 4)
 				|| (treasurePosition.getRow() == toRate.getRow() - 4
 						&& treasurePosition.getCol() == toRate.getCol() - 4)
@@ -172,7 +172,7 @@ public class KI implements Runnable {
 		return false;
 	}
 
-	private boolean checkSave4(PositionType toRate, PositionType treasurePosition2) {
+	private boolean checkSave4(PositionType toRate, PositionType treasurePosition) {
 		if ((treasurePosition.getRow() == toRate.getRow() - 4 && treasurePosition.getCol() == toRate.getCol() - 2)
 				|| (treasurePosition.getRow() == toRate.getRow() - 4
 						&& treasurePosition.getCol() == toRate.getCol() + 2)
@@ -217,7 +217,7 @@ public class KI implements Runnable {
 
 	}
 
-	private boolean checkSave1(PositionType toRate, PositionType treasurePosition2) {
+	private boolean checkSave1(PositionType toRate, PositionType treasurePosition) {
 		if (treasurePosition.getRow() == toRate.getRow() - 2 || treasurePosition.getRow() == toRate.getRow() + 2
 				|| treasurePosition.getCol() == toRate.getCol() - 2
 				|| treasurePosition.getCol() == toRate.getCol() + 2) {
