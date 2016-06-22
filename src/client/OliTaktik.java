@@ -50,10 +50,10 @@ public class OliTaktik implements Taktik {
 		treasurePosition = new PositionType();
 		
 		//TODO
-		Thread one = new Thread(new KI(shiftCard, board, treasurePosition, myPosition));
+		Thread one = new Thread(new KI(shiftCard, board, treasurePosition, myPosition, treasure));
 		one.start();
 		
-		Thread two = new Thread(new KI(shiftCard, board, treasurePosition, myPosition));
+		Thread two = new Thread(new KI(shiftCard, board, treasurePosition, myPosition, treasure));
 		
 		
 		
