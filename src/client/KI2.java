@@ -31,6 +31,7 @@ public class KI2 implements Runnable {
 			return true;
 		}
 
+		
 		return false;
 
 	}
@@ -198,7 +199,7 @@ public class KI2 implements Runnable {
 		Openings openingsMyPosition = cardType.getOpenings();
 		ret.add(tmp);
 		System.out.println("can go to " + tmp.getRow() + "\t" + tmp.getCol());
-		// TODO check ob die andere karte für uns offen ist!
+		// TODO check ob die andere karte f��r uns offen ist!
 		if (openingsMyPosition.isBottom()) {
 			bottem(tmp, ret);
 		}
