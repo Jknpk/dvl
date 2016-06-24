@@ -37,7 +37,7 @@ public class Game {
 
 				if (mcAnswer.getMcType() == MazeComType.ACCEPT) {
 					if (mcAnswer.getAcceptMessage().isAccept()) {
-						System.err.println("Gï¿½ltiger Zug!");
+						System.err.println("Gültiger Zug!");
 					} else if (!mcAnswer.getAcceptMessage().isAccept()
 							&& mcAnswer.getAcceptMessage().getErrorCode() == ErrorType.AWAIT_MOVE) {
 						System.err.println("Falsche Nachricht!");

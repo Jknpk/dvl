@@ -122,17 +122,24 @@ public class BoardGenerator extends BoardType {
 	public PositionType findTreasure(TreasureType treasureType, BoardType board) {
 		for (int i = 0; i < 7; i++) {
 			for (int j = 0; j < 7; j++) {
-				TreasureType treasure = getCard(i, j, board).getTreasure();
-				if (treasure == treasureType) {
-					PositionType pos = new PositionType();
-					pos.setCol(j);
-					pos.setRow(i);
-					return pos;
+				board.getRow().size();
+				board.getRow().get(0).getCol().size();
+				System.out.println("Zeilenlänge: " +  board.getRow().size());
+				System.out.println("Spaltenlänge: " + board.getRow().get(0).getCol().size());
+				if(board.getRow().get(i).getCol().get(j).getTreasure() == treasureType){
+					PositionType treasurePosition = new PositionType();
+					treasurePosition.setRow(i);
+					treasurePosition.setCol(j);
+					System.out.println("Hab deine Treasure bei (" +treasurePosition.getRow() +  "|" + treasurePosition.getCol() + ") wiedergefunden!");
+					return treasurePosition;
 				}
+				
+				
 			}
 		}
 		// Schatz nicht gefunden, kann nur bedeuten, dass Schatz sich auf
 		// Schiebekarte befindet
+		System.out.println("Konnte deine Treasure nicht finden! Return null. Obacht!");
 		return null;
 	}
 

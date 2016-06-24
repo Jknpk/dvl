@@ -6,8 +6,10 @@ package client;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
+import java.util.concurrent.CompletionService;
 import java.util.concurrent.ExecutionException;
-import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executor;
+import java.util.concurrent.ExecutorCompletionService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.Future;
 
@@ -56,32 +58,48 @@ public class OliTaktik implements Taktik {
 		
 		//TODO
 		
-		final ExecutorService service;
-		final Future<BestCardPosition> task1;
-		final Future<BestCardPosition> task2;
-		final Future<BestCardPosition> task3;
-		final Future<BestCardPosition> task4;
-		
-		service = Executors.newFixedThreadPool(4);
-		
+		Executor executor = Executors.newFixedThreadPool(4);
+		CompletionService<BestCardPosition> completionService = new ExecutorCompletionService<BestCardPosition>(executor);
+
 		Card cardShiftCard= new Card(shiftCard);
 		List<Card> shiftCards = cardShiftCard.getPossibleRotations();
-		System.out.println("Laenge von shiftCards " + shiftCards.size());
-		task1 = service.submit(new KI(shiftCards.get(0), board, treasurePosition, myPosition, treasure));
-		task2 = service.submit(new KI(shiftCards.get(1), board, treasurePosition, myPosition, treasure));
-		task3 = service.submit(new KI(shiftCards.get(2), board, treasurePosition, myPosition, treasure));
-		task4 = service.submit(new KI(shiftCards.get(3), board, treasurePosition, myPosition, treasure));
-		BestCardPosition[] bcps = new BestCardPosition[4];
-		try{
-			bcps[0] = task1.get();
-			bcps[1] = task2.get();
-			bcps[2] = task3.get();
-			bcps[3] = task4.get();
-		}catch(InterruptedException | ExecutionException e){
-			e.printStackTrace();
-			System.out.println("Dein Scheiﬂ klappt nicht!");
+		
+		// Die Karten sehen alle richtig gedreht aus..
+		System.out.println("so sehen die 4 ShiftCards aus:");
+		for(int i = 0; i < shiftCards.size(); i++){
+			System.out.println("Karte " + i +":");
+			System.out.println(shiftCards.get(i).toString());
 		}
-		service.shutdown();
+		
+		for(int i = 0; i < 4; i++) {
+			completionService.submit(new KI(shiftCards.get(i), board, treasurePosition, myPosition, treasure, ownPlayerId));
+		}
+		
+		int received = 0;
+		boolean errors = false;
+		
+		BestCardPosition[] bcps = new BestCardPosition[4];
+		while(received < 4) {
+		      Future<BestCardPosition> resultFuture = null;
+			try {
+				resultFuture = completionService.take();
+			} catch (InterruptedException e1) {
+				e1.printStackTrace();
+			} //blocks if none available
+		      try {
+		    	  if(resultFuture != null){
+		    		  BestCardPosition result = resultFuture.get();
+			    	  bcps[received] = result;
+			    	  received ++;
+		    	  }
+		      }
+		      catch(Exception e) {
+		         System.out.println("Es gab Errors!");
+		         e.printStackTrace();
+		         errors = true;
+		      }
+		}
+		
 		for(int i = 0; i < 4; i++){
 			System.out.println(bcps[i] + "  " + bcps[i].getMr().getValue());
 		}
@@ -136,7 +154,11 @@ public class OliTaktik implements Taktik {
 		//if (!direct) {
 			// myPosition = positionsToGo.get(positionsToGo.size() - 1);
 		//}
-
+		System.out.println("Folgendes Paket wird an den Server geschickt:");
+		System.out.println("Shiftposition: (" + bcps[best].getShiftPosition().getRow() + "|" + bcps[best].getShiftPosition().getCol() + ")");
+		System.out.println("Shiftcard: " + bcps[best].getShiftCard());
+		System.out.println("Neue Pin Position: (" + bcps[best].getNewMyPosition().getRow() + "|" + bcps[best].getNewMyPosition().getCol() + ")");
+		
 		MoveMessageType moveMessage = new MoveMessageType();
 		moveMessage.setShiftPosition(bcps[best].getShiftPosition());
 		moveMessage.setShiftCard(bcps[best].getShiftCard());
