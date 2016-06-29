@@ -6,14 +6,9 @@ package client;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
-import java.util.concurrent.ExecutionException;
-import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
-import java.util.concurrent.Future;
 
 import generated.AwaitMoveMessageType;
 import generated.BoardType;
-import generated.BoardType.Row;
 import generated.CardType;
 import generated.CardType.Openings;
 import generated.MoveMessageType;
@@ -36,7 +31,6 @@ public class OliTaktik implements Taktik {
 	private CardType shiftCard;
 	private PositionType treasurePosition;
 
-
 	/*
 	 * (non-Javadoc)
 	 * 
@@ -44,7 +38,6 @@ public class OliTaktik implements Taktik {
 	 */
 	@Override
 	public MoveMessageType getMove(AwaitMoveMessageType awaitMoveMessage, int ownPlayerId) {
-		// TODO Auto-generated method stub
 		board = awaitMoveMessage.getBoard();
 		foundTreasures = awaitMoveMessage.getFoundTreasures();
 		treasure = awaitMoveMessage.getTreasure();
@@ -53,102 +46,128 @@ public class OliTaktik implements Taktik {
 		this.ownPlayerId = ownPlayerId;
 		myPosition = new PositionType();
 		treasurePosition = new PositionType();
-		
-		//TODO
-		
-		final ExecutorService service;
-		final Future<BestCardPosition> task1;
-		final Future<BestCardPosition> task2;
-		final Future<BestCardPosition> task3;
-		final Future<BestCardPosition> task4;
-		
-		service = Executors.newFixedThreadPool(4);
-		
-		Card cardShiftCard= new Card(shiftCard);
-		List<Card> shiftCards = cardShiftCard.getPossibleRotations();
-		System.out.println("Laenge von shiftCards " + shiftCards.size());
-		task1 = service.submit(new KI(shiftCards.get(0), board, treasurePosition, myPosition, treasure));
-		task2 = service.submit(new KI(shiftCards.get(1), board, treasurePosition, myPosition, treasure));
-		task3 = service.submit(new KI(shiftCards.get(2), board, treasurePosition, myPosition, treasure));
-		task4 = service.submit(new KI(shiftCards.get(3), board, treasurePosition, myPosition, treasure));
-		BestCardPosition[] bcps = new BestCardPosition[4];
-		try{
-			bcps[0] = task1.get();
-			bcps[1] = task2.get();
-			bcps[2] = task3.get();
-			bcps[3] = task4.get();
-		}catch(InterruptedException | ExecutionException e){
-			e.printStackTrace();
-			System.out.println("Dein Scheiß klappt nicht!");
-		}
-		service.shutdown();
-		for(int i = 0; i < 4; i++){
-			System.out.println(bcps[i] + "  " + bcps[i].getMr().getValue());
-		}
-		
-		int best = 0;
-		for(int i = 0; i < 3; i++){
-			if(bcps[i].getMr().getValue() < bcps[i+1].getMr().getValue()){
-				best = i+1;
-			}
-		}
-		
-		
-		
-		//BoardGenerator generator = new BoardGenerator();
-		// print treasure to go
-		//System.out.println("Treasure to go: " + treasure.name() + "\n");
-		// print board
-		//printBoard();
 
-		// print shifted card
-		//printShiftedCard();
+		// final ExecutorService service;
+		// final Future<BestCardPosition> task1;
+		// final Future<BestCardPosition> task2;
+		// final Future<BestCardPosition> task3;
+		// final Future<BestCardPosition> task4;
+		//
+		// service = Executors.newFixedThreadPool(4);
+		//
+		// Card cardShiftCard = new Card(shiftCard);
+		// List<Card> shiftCards = cardShiftCard.getPossibleRotations();
+		// System.out.println("Laenge von shiftCards " + shiftCards.size());
+		// task1 = service.submit(new KI(shiftCards.get(0), board,
+		// treasurePosition, myPosition, treasure));
+		// task2 = service.submit(new KI(shiftCards.get(1), board,
+		// treasurePosition, myPosition, treasure));
+		// task3 = service.submit(new KI(shiftCards.get(2), board,
+		// treasurePosition, myPosition, treasure));
+		// task4 = service.submit(new KI(shiftCards.get(3), board,
+		// treasurePosition, myPosition, treasure));
+		// BestCardPosition[] bcps = new BestCardPosition[4];
+		// try {
+		// bcps[0] = task1.get();
+		// bcps[1] = task2.get();
+		// bcps[2] = task3.get();
+		// bcps[3] = task4.get();
+		// } catch (InterruptedException | ExecutionException e) {
+		// e.printStackTrace();
+		// System.out.println("Dein Scheiï¿½ klappt nicht!");
+		// }
+		// service.shutdown();
+		// for (int i = 0; i < 4; i++) {
+		// System.out.println(bcps[i] + " " + bcps[i].getMr().getValue());
+		// }
+		//
+		// int best = 0;
+		// for (int i = 0; i < 3; i++) {
+		// if (bcps[i].getMr().getValue() < bcps[i + 1].getMr().getValue()) {
+		// best = i + 1;
+		// }
+		// }
+
+		BoardGenerator generator = new BoardGenerator();
 
 		// shift board to get acutely board after shifting
-		//PositionType input = createRandomPositionForShiftedCard();
-		// TODO my set position after shifting
+		PositionType input = createRandomPositionForShiftedCard();
 
-		//System.out.println(input.getRow());
-		//System.out.println(input.getCol());
-		//board = generator.proceedShift(board, input, shiftCard);
-		//printBoard();
-		//myPosition = generator.findPlayer(ownPlayerId, board);
-		//treasurePosition = generator.findTreasure(treasure, board);
-
-		// findMyPinPositionAndTreasurePosition();
-
-		// find treasure and pin on board
-		//System.out.println("searched card position\n\trow: " + treasurePosition.getRow() + " column: " + treasurePosition.getCol());
-		//System.out.println("my position:\t" + myPosition.getRow() + " " + myPosition.getCol());
+		board = generator.proceedShift(board, input, shiftCard);
+		myPosition = generator.findPlayer(ownPlayerId, board);
+		treasurePosition = generator.findTreasure(treasure, board);
 
 		// list with all possible moves
-		//List<PositionType> positionsToGo = possibleMoves();
-		//System.err.println(positionsToGo.size());
-		// check if i can go direct to treasure position
-		//boolean direct = false;
-		//for (PositionType positionType : positionsToGo) {
-		//	if (equalsPositionTypes(treasurePosition, positionType)) {
-		//		myPosition = treasurePosition;
-		//		direct = true;
-		//		break;
-		//	}
-		//}
-		//if (!direct) {
-			// myPosition = positionsToGo.get(positionsToGo.size() - 1);
-		//}
-
 		MoveMessageType moveMessage = new MoveMessageType();
-		moveMessage.setShiftPosition(bcps[best].getShiftPosition());
-		moveMessage.setShiftCard(bcps[best].getShiftCard());
-		moveMessage.setNewPinPos(bcps[best].getNewMyPosition());
+		List<PositionType> positionsToGo = possibleMoves();
+		moveMessage.setShiftCard(shiftCard);
+		moveMessage.setShiftPosition(input);
+		moveMessage.setNewPinPos(myPosition);
+		MoveRating tmp = MoveRating.STAY;
+		for (PositionType positionType : positionsToGo) {
+			MoveRating rateMove = rateMove(positionType, treasurePosition);
+			if (rateMove.getValue() > tmp.getValue()) {
+				moveMessage.setNewPinPos(positionType);
+				tmp = rateMove;
+			}
+		}
+
 		return moveMessage;
 	}
 
-	
+	private ArrayList<PositionType> listeAllShiftposition() {
+		ArrayList<PositionType> ret = new ArrayList<>();
+		PositionType a = new PositionType();
+		a.setRow(1);
+		a.setCol(0);
+		PositionType b = new PositionType();
+		b.setRow(3);
+		b.setCol(0);
+		PositionType c = new PositionType();
+		c.setRow(5);
+		c.setCol(0);
+		PositionType d = new PositionType();
+		d.setRow(1);
+		d.setCol(6);
+		PositionType e = new PositionType();
+		e.setRow(3);
+		e.setCol(6);
+		PositionType f = new PositionType();
+		f.setRow(5);
+		f.setCol(6);
 
-
-
-
+		PositionType g = new PositionType();
+		g.setRow(0);
+		g.setCol(1);
+		PositionType h = new PositionType();
+		h.setRow(0);
+		h.setCol(3);
+		PositionType i = new PositionType();
+		i.setRow(0);
+		i.setCol(5);
+		PositionType j = new PositionType();
+		j.setRow(0);
+		j.setCol(1);
+		PositionType k = new PositionType();
+		k.setRow(0);
+		k.setCol(3);
+		PositionType l = new PositionType();
+		l.setRow(0);
+		l.setCol(5);
+		ret.add(a);
+		ret.add(b);
+		ret.add(c);
+		ret.add(d);
+		ret.add(e);
+		ret.add(f);
+		ret.add(g);
+		ret.add(h);
+		ret.add(i);
+		ret.add(j);
+		ret.add(k);
+		ret.add(l);
+		return ret;
+	}
 
 	private PositionType createRandomPositionForShiftedCard() {
 		PositionType ret = new PositionType();
@@ -189,7 +208,6 @@ public class OliTaktik implements Taktik {
 		PositionType tmp = new PositionType();
 		tmp.setCol(myPosition.getCol());
 		tmp.setRow(myPosition.getRow());
-		// TODO go throuhg all possible cards and add the position to ret
 		findPositions(tmp, ret);
 		return ret;
 	}
@@ -283,73 +301,229 @@ public class OliTaktik implements Taktik {
 		}
 	}
 
-	private void printShiftedCard() {
-		System.out.println("shifted card: ");
-		StringBuilder sb = new StringBuilder();
-		shiftCard = board.getShiftCard();
-		Openings openings = shiftCard.getOpenings();
-		sb.append("\topen to: ");
-		if (openings.isBottom()) {
-			sb.append("bottem ");
-		}
-		if (openings.isLeft()) {
-			sb.append("left ");
-		}
-		if (openings.isRight()) {
-			sb.append("right ");
-		}
-		if (openings.isTop()) {
-			sb.append("top ");
-		}
-		sb.append("\n");
-		System.out.println(sb.toString());
-	}
-
-	private void printBoard() {
-		System.out.println("Board: ");
-		List<Row> rows = board.getRow();
-		StringBuilder sb = new StringBuilder();
-		for (int i = 0; i < rows.size(); i++) {
-			List<CardType> col = rows.get(i).getCol();
-			for (int j = 0; j < col.size(); j++) {
-				if (col.get(j).getTreasure() != null) {
-					sb.append(col.get(j).getTreasure().name() + "   \t");
-				} else {
-					sb.append("******   \t");
-				}
-			}
-			sb.append("\n");
-		}
-		sb.append("\n");
-		System.out.println(sb.toString());
-	}
-
-	private void findMyPinPositionAndTreasurePosition() {
-		List<Row> rows = board.getRow();
-		for (int i = 0; i < rows.size(); i++) {
-			List<CardType> cols = rows.get(i).getCol();
-			for (int j = 0; j < cols.size(); j++) {
-				if (cols.get(j).getPin() != null && cols.get(j).getPin().getPlayerID() != null) {
-					List<Integer> playerID = cols.get(j).getPin().getPlayerID();
-					for (Integer integer : playerID) {
-						if (Integer.valueOf(ownPlayerId) == integer) {
-							myPosition.setRow(i);
-							myPosition.setCol(j);
-						}
-					}
-				}
-
-				if (cols.get(j).getTreasure() != null && cols.get(j).getTreasure().name().equals(treasure.name())) {
-					treasurePosition.setRow(i);
-					treasurePosition.setCol(j);
-					return;
-				}
-			}
-		}
-	}
-
 	private boolean equalsPositionTypes(PositionType a, PositionType b) {
 		return a.getCol() == b.getCol() && a.getRow() == b.getRow();
+	}
+
+	private MoveRating rateMove(PositionType toRate, PositionType treasurePosition) {
+		// if toRate is safe
+
+		if (treasurePosition == null) {
+			return MoveRating.STAY;
+		}
+		if (toRate.getCol() == treasurePosition.getCol() && toRate.getRow() == treasurePosition.getRow()) {
+			return MoveRating.HIT;
+		}
+		// verÃ¤ndert nur die position wenn man auf eine feste Position kann
+		if (isSave(toRate)) {
+			// check if trasurePosition is on a save place
+			if (isSave(treasurePosition)) {
+				if (checkSave1(toRate, treasurePosition)) {
+					return MoveRating.SAVE_1;
+				} else if (checkSave2(toRate, treasurePosition)) {
+					return MoveRating.SAVE_2;
+				} else if (checkSave3(toRate, treasurePosition)) {
+					return MoveRating.SAVE_3;
+				} else if (checkSave4(toRate, treasurePosition)) {
+					return MoveRating.SAVE_4;
+				} else if (checkSave5(toRate, treasurePosition)) {
+					return MoveRating.SAVE_5;
+				}
+			} else {
+				// TODO
+				// in der mitte von 2 festen
+				if (treasurePosition.getRow() % 2 != 0 && treasurePosition.getCol() % 2 != 0) {
+					if (checkMiddle(toRate, treasurePosition) != null) {
+						return checkMiddle(toRate, treasurePosition);
+					}
+				}
+				// links und rechts sind fest
+				if (treasurePosition.getRow() % 2 != 0 && treasurePosition.getCol() % 2 == 0) {
+					// TODO
+					if (checkLeftRight(toRate, treasurePosition) != null) {
+						return checkLeftRight(toRate, treasurePosition);
+					}
+				}
+				// oben und unten sind fest
+				if (treasurePosition.getRow() % 2 == 0 && treasurePosition.getCol() % 2 != 0) {
+					if (checkTopBottem(toRate, treasurePosition) != null) {
+						checkTopBottem(toRate, treasurePosition);
+					}
+				}
+			}
+		}
+		return MoveRating.STAY;
+	}
+
+	private MoveRating checkTopBottem(PositionType toRate, PositionType treasurePosition) {
+		int trasureCol = treasurePosition.getCol();
+		int treasureRow = treasurePosition.getRow();
+		int toRateCol = toRate.getCol();
+		int toRateRow = toRate.getRow();
+		if (treasureRow == toRateRow && trasureCol - 1 == toRateCol
+				|| treasureRow == toRateRow && trasureCol + 1 == toRateCol) {
+			return MoveRating.SAVE_1;
+		}
+		if (treasureRow - 2 == toRateRow && trasureCol - 1 == toRateCol
+				|| treasureRow - 2 == toRateRow && trasureCol + 1 == toRateCol
+				|| treasureRow + 2 == toRateRow && trasureCol - 1 == toRateCol
+				|| treasureRow + 2 == toRateRow && trasureCol + 1 == toRateCol
+				|| treasureRow == toRateRow && trasureCol + 3 == toRateCol
+				|| treasureRow == toRateRow && trasureCol + 3 == toRateCol) {
+			return MoveRating.SAVE_2;
+		}
+		if (treasureRow - 2 == toRateRow && trasureCol - 3 == toRateCol
+				|| treasureRow - 2 == toRateRow && trasureCol + 3 == toRateCol
+				|| treasureRow + 2 == toRateRow && trasureCol - 3 == toRateCol
+				|| treasureRow + 2 == toRateRow && trasureCol + 3 == toRateCol) {
+			return MoveRating.SAVE_3;
+		}
+		return null;
+	}
+
+	private MoveRating checkLeftRight(PositionType toRate, PositionType treasurePosition) {
+		int trasureCol = treasurePosition.getCol();
+		int treasureRow = treasurePosition.getRow();
+		int toRateCol = toRate.getCol();
+		int toRateRow = toRate.getRow();
+		if ((treasureRow - 1 == toRateRow || treasureRow + 1 == toRateRow) && trasureCol == toRateCol) {
+			return MoveRating.SAVE_1;
+		}
+		if ((trasureCol + 3 == toRateCol || trasureCol - 3 == toRateCol) && trasureCol == toRateCol
+				|| trasureCol + 2 == toRateCol && treasureRow - 1 == toRateRow
+				|| trasureCol + 2 == toRateCol && treasureRow + 1 == toRateRow
+				|| trasureCol - 2 == toRateCol && treasureRow - 1 == toRateRow
+				|| trasureCol - 2 == toRateCol && treasureRow + 1 == toRateRow) {
+			return MoveRating.SAVE_2;
+		}
+		if (treasureRow + 3 == toRateRow && trasureCol + 2 == toRateCol
+				|| treasureRow - 3 == toRateRow && trasureCol + 2 == toRateCol
+				|| treasureRow + 3 == toRateRow && trasureCol - 2 == toRateCol
+				|| treasureRow - 3 == toRateRow && trasureCol - 2 == toRateCol) {
+			return MoveRating.SAVE_3;
+		}
+		return null;
+
+	}
+
+	private MoveRating checkMiddle(PositionType toRate, PositionType treasurePosition) {
+		int trasureCol = treasurePosition.getCol();
+		int treasureRow = treasurePosition.getRow();
+		int toRateCol = toRate.getCol();
+		int toRateRow = toRate.getRow();
+		if (trasureCol - 1 == toRateCol && treasureRow - 1 == toRateRow
+				|| trasureCol + 1 == toRateCol && treasureRow - 1 == toRateRow
+				|| trasureCol - 1 == toRateCol && treasureRow + 1 == toRateRow
+				|| trasureCol + 1 == toRateCol && treasureRow + 1 == toRateRow) {
+			return MoveRating.SAVE_1;
+		}
+		if (trasureCol - 3 == toRateCol && treasureRow - 1 == toRateRow
+				|| trasureCol - 3 == toRateCol && treasureRow + 1 == toRateRow
+				|| trasureCol + 3 == toRateCol && treasureRow - 1 == toRateRow
+				|| trasureCol + 3 == toRateCol && treasureRow + 1 == toRateRow
+
+				|| trasureCol - 1 == toRateCol && treasureRow - 3 == toRateRow
+				|| trasureCol - 1 == toRateCol && treasureRow + 3 == toRateRow
+				|| trasureCol + 1 == toRateCol && treasureRow - 3 == toRateRow
+				|| trasureCol + 1 == toRateCol && treasureRow + 3 == toRateRow) {
+			return MoveRating.SAVE_2;
+		}
+		if (trasureCol - 2 == toRateCol && treasureRow - 2 == toRateRow
+				|| trasureCol + 2 == toRateCol && treasureRow - 2 == toRateRow
+				|| trasureCol - 2 == toRateCol && treasureRow + 2 == toRateRow
+				|| trasureCol + 2 == toRateCol && treasureRow + 2 == toRateRow) {
+			return MoveRating.SAVE_3;
+		}
+		return null;
+	}
+
+	private boolean checkSave5(PositionType toRate, PositionType treasurePosition) {
+		if ((treasurePosition.getRow() == toRate.getRow() - 4 && treasurePosition.getCol() == toRate.getCol() + 4)
+				|| (treasurePosition.getRow() == toRate.getRow() - 4
+						&& treasurePosition.getCol() == toRate.getCol() - 4)
+				|| (treasurePosition.getRow() == toRate.getRow() + 4
+						&& treasurePosition.getCol() == toRate.getCol() + 4)
+				|| (treasurePosition.getRow() == toRate.getRow() + 4
+						&& treasurePosition.getCol() == toRate.getCol() - 4)) {
+			return true;
+		}
+		return false;
+	}
+
+	private boolean checkSave4(PositionType toRate, PositionType treasurePosition) {
+		if ((treasurePosition.getRow() == toRate.getRow() - 4 && treasurePosition.getCol() == toRate.getCol() - 2)
+				|| (treasurePosition.getRow() == toRate.getRow() - 4
+						&& treasurePosition.getCol() == toRate.getCol() + 2)
+				|| (treasurePosition.getRow() == toRate.getRow() + 4
+						&& treasurePosition.getCol() == toRate.getCol() - 2)
+				|| (treasurePosition.getRow() == toRate.getRow() + 4
+						&& treasurePosition.getCol() == toRate.getCol() + 2)) {
+			return true;
+		}
+		return false;
+	}
+
+	private boolean checkSave3(PositionType toRate, PositionType treasurePosition2) {
+		if (treasurePosition.getRow() == toRate.getRow() - 4 || treasurePosition.getRow() == toRate.getRow() + 4
+				|| treasurePosition.getCol() == toRate.getCol() - 4
+				|| treasurePosition.getCol() == toRate.getCol() + 4) {
+			return true;
+		}
+		return false;
+	}
+
+	private boolean checkSave2(PositionType toRate, PositionType treasurePosition2) {
+		if ((treasurePosition.getRow() == toRate.getRow() - 2 && treasurePosition.getCol() == toRate.getCol() - 2)
+				|| (treasurePosition.getRow() == toRate.getRow() - 2
+						&& treasurePosition.getCol() == toRate.getCol() + 2)
+				|| (treasurePosition.getRow() == toRate.getRow() + 2
+						&& treasurePosition.getCol() == toRate.getCol() - 2)
+				|| (treasurePosition.getRow() == toRate.getRow() + 2
+						&& treasurePosition.getCol() == toRate.getCol() + 2)) {
+			return true;
+		}
+		return false;
+
+		// max 7
+		// if (treasurePosition.getRow() == toRate.getRow() - 4 ||
+		// treasurePosition.getRow() == toRate.getRow() + 4
+		// || treasurePosition.getCol() == toRate.getCol() - 4
+		// || treasurePosition.getCol() == toRate.getCol() + 4) {
+		// return true;
+		// // check right left corners
+		// } // TODO
+
+	}
+
+	private boolean checkSave1(PositionType toRate, PositionType treasurePosition) {
+		if (treasurePosition.getRow() == toRate.getRow() - 2 && treasurePosition.getCol() == toRate.getCol()
+				|| treasurePosition.getRow() == toRate.getRow() + 2 && treasurePosition.getCol() == toRate.getCol()
+				|| treasurePosition.getCol() == toRate.getCol() - 2 && treasurePosition.getRow() == toRate.getRow()
+				|| treasurePosition.getCol() == toRate.getCol() + 2 && treasurePosition.getRow() == toRate.getRow()) {
+			return true;
+			// check right left corners
+		}
+		// check2
+		// else if ((treasurePosition.getRow() == toRate.getRow() - 2
+		// && treasurePosition.getCol() == toRate.getCol() - 2)
+		// || (treasurePosition.getRow() == toRate.getRow() - 2
+		// && treasurePosition.getCol() == toRate.getCol() + 2)
+		// || (treasurePosition.getRow() == toRate.getRow() + 2
+		// && treasurePosition.getCol() == toRate.getCol() - 2)
+		// || (treasurePosition.getRow() == toRate.getRow() + 2
+		// && treasurePosition.getCol() == toRate.getCol() + 2)) {
+		// return true;
+		// }
+		return false;
+	}
+
+	private boolean isSave(PositionType position) {
+		if (position.getCol() % 2 == 0 && position.getRow() % 2 == 0) {
+			return true;
+		}
+
+		return false;
+
 	}
 
 }

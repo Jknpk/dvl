@@ -189,6 +189,7 @@ public class CardType {
 
 		/**
 		 * Ruft den Wert der bottom-Eigenschaft ab.
+		 * @param tmpBoard 
 		 * 
 		 */
 		public boolean isBottom() {

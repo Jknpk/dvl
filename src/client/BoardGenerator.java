@@ -24,7 +24,6 @@ import tools.DebugLevel;
  */
 public class BoardGenerator extends BoardType {
 
-
 	public BoardGenerator() {
 	}
 
@@ -42,11 +41,11 @@ public class BoardGenerator extends BoardType {
 
 				if (start == 6) {
 					for (int i = 6; i > 0; --i) {
-						setCard(row, i, new Card(getCard(row, i - 1, board)),board);
+						setCard(row, i, new Card(getCard(row, i - 1, board)), board);
 					}
 				} else {// Start==0
 					for (int i = 0; i < 6; ++i) {
-						setCard(row, i, new Card(getCard(row, i + 1, board)),board);
+						setCard(row, i, new Card(getCard(row, i + 1, board)), board);
 					}
 				}
 			}
@@ -69,7 +68,7 @@ public class BoardGenerator extends BoardType {
 
 			}
 		}
-		forbidden = sm.getOpposite(); //TODO: muss das hier raus?
+		forbidden = sm.getOpposite(); // TODO: muss das hier raus?
 		Card c = null;
 		c = new Card(shiftCard);
 		// Wenn Spielfigur auf neuer shiftcard steht,
